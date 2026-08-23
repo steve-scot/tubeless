@@ -1,0 +1,26 @@
+{
+  "name": "tubeless",
+  "description": "YouTube, with the noise let out. Hide Shorts, games, banners, and feed clutter.",
+  "version": "2.3.0",
+  "type": "module",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "wxt --browser firefox",
+    "dev:chrome": "wxt --browser chrome",
+    "build": "wxt build --browser firefox",
+    "build:chrome": "wxt build --browser chrome",
+    "zip": "wxt zip --browser firefox",
+    "zip:chrome": "wxt zip --browser chrome",
+    "compile": "tsc --noEmit",
+    "postinstall": "wxt prepare"
+  },
+  "devDependencies": {
+    "@wxt-dev/auto-icons": "^1.1.1",
+    "typescript": "^5.9.0",
+    "wxt": "^0.20.0"
+  },
+  "dependencies": {
+    "@fontsource-variable/geist": "^5.2.8"
+  }
+}

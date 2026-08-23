@@ -1,0 +1,366 @@
+/* Bundled font - Vite resolves this to WOFF2 in the extension build.
+   The wordmark used to be Fraunces text rendered with a web font; it's
+   now an outlined SVG (see popup/index.html), so Fraunces is no longer
+   needed and the tagline falls back to a system serif italic. */
+@import '@fontsource-variable/geist/wght.css';
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; overflow-x: hidden; }
+
+/* Light tokens (default) */
+:root {
+  --paper: #F4EDE0;
+  --surface: #FCF8EF;
+  --surface-2: #ECE2CE;
+  --ink: #1C1812;
+  --ink-soft: #3A332A;
+  --muted: #6E634F;
+  --muted-2: #7B7160;
+  --border: #E1D8C2;
+  --border-strong: #CFC2A4;
+  --accent: #DC4F2A;
+  --toggle-off: #D4C8B1;
+  --thumb: #FFFFFF;
+  --thumb-shadow: 0 1px 2px rgba(0, 0, 0, 0.25), 0 0 0 0.5px rgba(0, 0, 0, 0.05);
+  --master-hover: #E5DAC1;
+  --segment-bg: #ECE2CE;
+  --segment-active: #FFFFFF;
+  --segment-active-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 0 0 0.5px rgba(0, 0, 0, 0.04);
+  --select-arrow: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'><path fill='%236E634F' d='M5 7L1 3h8z'/></svg>");
+}
+
+/* Dark tokens - manual override */
+:root[data-theme="dark"] {
+  --paper: #191919;
+  --surface: #20201F;
+  --surface-2: #2A2929;
+  --ink: #E7E6E5;
+  --ink-soft: #C4C3C2;
+  --muted: #929190;
+  --muted-2: #888786;
+  --border: #2B2A2A;
+  --border-strong: #3E3D3C;
+  --accent: #F26B45;
+  --toggle-off: #454444;
+  --thumb: #E7E6E5;
+  --thumb-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 0 0 0.5px rgba(0, 0, 0, 0.3);
+  --master-hover: #323231;
+  --segment-bg: #2A2929;
+  --segment-active: #3E3D3C;
+  --segment-active-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 0 0 0.5px rgba(255, 255, 255, 0.04);
+  --select-arrow: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'><path fill='%23929190' d='M5 7L1 3h8z'/></svg>");
+}
+
+/* Auto: follow OS when no manual override */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --paper: #191919;
+    --surface: #20201F;
+    --surface-2: #2A2929;
+    --ink: #E7E6E5;
+    --ink-soft: #C4C3C2;
+    --muted: #929190;
+    --muted-2: #888786;
+    --border: #2B2A2A;
+    --border-strong: #3E3D3C;
+    --accent: #F26B45;
+    --toggle-off: #454444;
+    --thumb: #E7E6E5;
+    --thumb-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 0 0 0.5px rgba(0, 0, 0, 0.3);
+    --master-hover: #323231;
+    --segment-bg: #2A2929;
+    --segment-active: #3E3D3C;
+    --segment-active-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 0 0 0.5px rgba(255, 255, 255, 0.04);
+    --select-arrow: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'><path fill='%23929190' d='M5 7L1 3h8z'/></svg>");
+  }
+}
+
+body {
+  width: 360px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Geist Variable', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13.5px;
+  line-height: 1.4;
+}
+
+.popup {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.header {
+  padding: 20px 28px 16px 20px;
+  background: linear-gradient(180deg, var(--surface) 0%, var(--paper) 100%);
+  border-bottom: 1px solid var(--border);
+}
+
+.wordmark {
+  margin: 0 0 6px;
+  /* h1 wraps the inline SVG; line-height: 0 strips the extra
+     line-box so the SVG sits flush at its native height. */
+  line-height: 0;
+}
+
+.brand-mark {
+  display: block;
+  width: 150px;
+  height: 22px;
+}
+.brand-mark .brand-pill { stroke: var(--accent); }
+.brand-mark .brand-wordmark { fill: var(--ink); }
+
+.tagline {
+  font-family: ui-serif, Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* Power row - global on/off, sits between header and first section */
+.row-power {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 20px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  user-select: none;
+  transition: background 120ms ease;
+}
+.row-power:hover { background: var(--master-hover); }
+.row-power .row-label {
+  font-weight: 500;
+  color: var(--ink);
+  font-size: 13.5px;
+}
+.row-power .row-hint {
+  display: block;
+  font-size: 12.5px;
+  color: var(--muted);
+  font-weight: 400;
+  margin-top: 1px;
+}
+/* When the master is off, mute the YouTube-modifying sections so it's
+   clear those toggles are present-but-inert. .section-popup (Appearance)
+   controls the popup itself and stays active. */
+.popup.is-paused .section:not(.section-popup) { opacity: 0.55; }
+.popup.is-paused .section:not(.section-popup) .toggle-track,
+.popup.is-paused .section:not(.section-popup) .select,
+.popup.is-paused .section:not(.section-popup) .segmented { filter: saturate(0.5); }
+
+/* Sections */
+.section {
+  padding: 14px 28px 12px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.section:last-of-type { border-bottom: none; padding-bottom: 16px; }
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 8px;
+}
+.section-icon {
+  width: 12px;
+  height: 12px;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.section-title {
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  margin: 0;
+  color: var(--ink);
+}
+
+/* Standard toggle row */
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6.5px 0;
+  cursor: pointer;
+  user-select: none;
+}
+.row:hover .row-label { color: var(--ink); }
+.row-label {
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  transition: color 120ms ease;
+}
+.row-hint {
+  display: block;
+  font-size: 12.5px;
+  color: var(--muted);
+  font-weight: 400;
+  margin-top: 1px;
+}
+
+/* Toggle switch */
+.toggle {
+  position: relative;
+  width: 30px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+.toggle-track {
+  position: absolute;
+  inset: 0;
+  background: var(--toggle-off);
+  border-radius: 999px;
+  transition: background 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  background: var(--thumb);
+  border-radius: 50%;
+  transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--thumb-shadow);
+}
+.toggle input:checked + .toggle-track { background: var(--accent); }
+.toggle input:checked + .toggle-track .toggle-thumb {
+  transform: translateX(12px);
+  background: white;
+}
+.toggle input:focus-visible + .toggle-track {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Select row */
+.select-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6.5px 0;
+}
+.select-row .row-label {
+  font-size: 13.5px;
+  color: var(--ink-soft);
+}
+
+.select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 22px 4px 9px;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--ink);
+  cursor: pointer;
+  background-image: var(--select-arrow);
+  background-repeat: no-repeat;
+  background-position: right 7px center;
+  transition: border-color 120ms ease;
+}
+.select:hover { border-color: var(--border-strong); }
+.select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: transparent;
+}
+
+/* Segmented control */
+.segmented {
+  display: inline-flex;
+  background: var(--segment-bg);
+  border-radius: 7px;
+  padding: 2px;
+  gap: 2px;
+}
+.segment {
+  appearance: none;
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--muted);
+  padding: 4px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: color 150ms ease, background 150ms ease, box-shadow 150ms ease;
+  letter-spacing: 0.01em;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.segment:hover { color: var(--ink-soft); }
+.segment[aria-pressed="true"] {
+  background: var(--segment-active);
+  color: var(--ink);
+  box-shadow: var(--segment-active-shadow);
+}
+.segment:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.segment svg {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+}
+
+/* Footer */
+.footer {
+  padding: 11px 28px 13px 20px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.footer-mark {
+  width: 30px;
+  height: 16px;
+  color: var(--muted);
+  display: inline-flex;
+  opacity: 0.7;
+}
+.footer-mark svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.footer-version {
+  font-feature-settings: "tnum" 1;
+  font-size: 11.5px;
+  color: var(--muted-2);
+  letter-spacing: 0.06em;
+}
+
+/* Child rows greyed out while their master toggle is on */
+.row-disabled { cursor: not-allowed; }
+.row-disabled .row-label { opacity: 0.45; }
+.row-disabled .toggle-track { opacity: 0.5; }
+
+.section-hint {
+  font-size: 12.5px;
+  color: var(--muted);
+  margin: 0 0 6px;
+  line-height: 1.35;
+}
