@@ -206,6 +206,7 @@ export const SELECTORS = {
       // wrapper included so no empty grid row is left behind.
       'ytd-rich-shelf-renderer:has(a[href^="/playables"])', // ✓ Playables shelf
       'ytd-rich-section-renderer:has(a[href^="/playables"])', // ✓ section wrapper
+      'ytd-horizontal-card-list-renderer:has(a[href^="/playables"])', // ! Playables in a card row (reported by filter lists)
       // Mobile equivalents. The title-anchor structure on mobile uses
       // different inner IDs; we match the shelf wrapper having ANY child
       // [title*="Games" i] which is less precise but the safest bet
@@ -255,6 +256,9 @@ export const SELECTORS = {
       'ytd-rich-section-renderer:has(ytd-chips-shelf-with-video-shelf-renderer)', // ✓ section wrapper
       // Mobile equivalents - naming-pattern parallels. Not yet observed in
       // public filter lists, so flagged ! pending device verification.
+      // Mobile "Explore more topics" - the element has no ytm- prefix.
+      'chips-shelf-with-video-shelf-renderer', // ✓ mobile topical-discovery shelf
+      'ytm-rich-section-renderer:has(chips-shelf-with-video-shelf-renderer)', // ✓ mobile section wrapper
       'ytm-statement-banner-renderer', // ! mobile statement/election banner
       'ytm-emergency-onebox-renderer', // ! mobile emergency banner
       'ytm-rich-shelf-renderer:has([title*="Live" i])', // ! mobile live-event shelf
@@ -281,12 +285,15 @@ export const SELECTORS = {
     ],
 
     // ─── Hide Movies / Shows in feeds ──────────────────────────────────
-    // Two surfaces:
+    // Three surfaces:
     //   1. Shelves with "Movies" / "Shows" in the title (covered by the
     //      master hideShelves toggle, but kept here as a fallback).
     //   2. Individual movie cards interleaved into the home grid. These
     //      are normal ytd-rich-item-renderer wrappers but carry an avatar
     //      labelled "YouTube Movies" and a watch URL with pp=sAQB.
+    //   3. The same film cards in the watch-page sidebar.
+    // The Buy/Rent panel on a film's own watch page (#offer-module) is
+    // deliberately left alone: it's how you rent the film you opened.
     hideMovies: [
       // Shelves (legacy - duplicated by hideShelves master). Title
       // matches are English only.
@@ -301,6 +308,7 @@ export const SELECTORS = {
       // locale-independent; the avatar aria-label is English only.
       'ytd-rich-item-renderer:has(a[href*="pp=sAQB"])', // ? URL marker, any locale
       'ytd-rich-item-renderer:has([aria-label="Go to channel YouTube Movies"])', // ✓ English label
+      'ytd-watch-next-secondary-results-renderer yt-lockup-view-model:has(a[href*="pp=sAQB"])', // ✓ watch sidebar ("Free with ads" films)
       // Mobile equivalents. The aria-label hook is platform-independent
       // (YouTube Movies channel is the same entity on both sites). The
       // pp=sAQB URL marker is also identical across platforms.
@@ -331,6 +339,7 @@ export const SELECTORS = {
       'ytd-rich-item-renderer:has(.ytBadgeShapeCommerce > .ytBadgeShapeIcon)', // ✓ current badge class
       'ytd-video-renderer:has(.ytBadgeShapeCommerce > .ytBadgeShapeIcon)', // ? search results
       'ytd-grid-video-renderer:has(.ytBadgeShapeCommerce > .ytBadgeShapeIcon)', // ? grid variant
+      'ytd-watch-next-secondary-results-renderer yt-lockup-view-model:has(.ytBadgeShapeCommerce > .ytBadgeShapeIcon)', // ✓ watch sidebar
       // Wiz class-system variant of the same commerce badge
       'ytd-rich-item-renderer:has(.badge-shape-wiz--commerce > .badge-shape-wiz__icon)', // ! wiz badge class
       'ytd-video-renderer:has(.badge-shape-wiz--commerce > .badge-shape-wiz__icon)', // ! search results
@@ -394,10 +403,12 @@ export const SELECTORS = {
       'ytd-rich-item-renderer:has(yt-collection-thumbnail-view-model):has(a[href*="list=RD"])', // ✓ home/subs Mix card
       'ytd-search yt-lockup-view-model:has(yt-collection-thumbnail-view-model):has(a[href*="list=RD"])', // ✓ search results Mix
       'ytd-watch-next-secondary-results-renderer yt-lockup-view-model:has(yt-collection-thumbnail-view-model):has(a[href*="list=RD"])', // ✓ watch sidebar Mix
-      // Mobile - same list=RD overmatch, so require the collection
-      // thumbnail here too.
-      'ytm-rich-item-renderer:has(yt-collection-thumbnail-view-model):has(a[href*="list=RD"])', // ! mobile mix card
-      'ytm-radio-renderer', // ! mobile dedicated mix renderer
+      // Mobile Home renders Mix cards as ytm-radio-renderer inside a grid
+      // cell; hide the cell too or a blank slot is left. The list=RD
+      // overmatch applies here as well, hence the collection thumbnail.
+      'ytm-rich-item-renderer:has(ytm-radio-renderer)', // ✓ mobile Mix grid cell
+      'ytm-radio-renderer', // ✓ mobile Mix card
+      'ytm-rich-item-renderer:has(yt-collection-thumbnail-view-model):has(a[href*="list=RD"])', // ! mobile mix card, view-model variant
     ],
 
     // ─── Hide Collections (playlists + podcasts) ───────────────────────
@@ -422,7 +433,7 @@ export const SELECTORS = {
     ],
 
     // ─── Hide Music videos in feeds ────────────────────────────────────
-    // Music videos use a special duration badge that combines a music-
+    // Feeds and search results. Music videos use a special duration badge that combines a music-
     // note icon WITH the duration text in a single <badge-shape>. The
     // distinguishing structural fact: icon + text in one badge, marked
     // with ytBadgeShapeTypography but NOT ytBadgeShapeNoText.
@@ -436,6 +447,7 @@ export const SELECTORS = {
     // fingerprint is the cleanest available hook.
     hideMusic: [
       'ytd-rich-item-renderer:has(badge-shape.ytBadgeShapeThumbnailDefault:not(.ytBadgeShapeNoText) .ytBadgeShapeIcon):not(:has(yt-collection-thumbnail-view-model))', // ✓
+      'ytd-video-renderer:has(badge-shape.ytBadgeShapeThumbnailDefault:not(.ytBadgeShapeNoText) .ytBadgeShapeIcon)', // ✓ search results
       // Mobile - same badge fingerprint, ytm- wrapper. ytBadgeShape* and
       // yt-collection-thumbnail-view-model are shared view-model classes.
       'ytm-rich-item-renderer:has(badge-shape.ytBadgeShapeThumbnailDefault:not(.ytBadgeShapeNoText) .ytBadgeShapeIcon):not(:has(yt-collection-thumbnail-view-model))', // ? mobile music card
@@ -548,7 +560,7 @@ export const SELECTORS = {
       // mobile action bar's buttons have no structural distinction.
       'ytm-slim-video-metadata-section-renderer button[aria-label="Share"]', // ✓ mobile Share, English label
       'ytm-slim-video-metadata-section-renderer button[aria-label*="more actions" i]', // ! mobile kebab
-      'ytm-slim-video-metadata-section-renderer .you-chat-entrypoint-button', // ! mobile Ask (if rolled out)
+      'ytm-slim-video-metadata-section-renderer .you-chat-entrypoint-button', // ✓ mobile Ask
     ],
 
     // ─── Hide merch shelf on watch pages ───────────────────────────────
@@ -799,6 +811,9 @@ export const SELECTORS = {
       'ytd-expandable-metadata-renderer[has-video-summary]', // ✓ watch description + search results
       'yt-video-description-youchat-section-view-model', // ✓ "Ask questions" section in the description
       'ytm-expandable-metadata-renderer:has(.expandableMetadataRendererCollapsedLeftSectionSummary)', // ? mobile summary row (public filter lists)
+      // Mobile "Ask questions" slide in the watch-page comments carousel;
+      // the comment teaser is a different item type.
+      'yt-carousel-item-view-model:has(> yt-text-carousel-item-view-model)', // ? mobile Ask slide
       // Ask YouTube: button inside the search bar, its suggestion panel,
       // and the AI mode chip on search results.
       '.ytSearchboxComponentActions > .ytSearchboxComponentActionsButton[client-ve-type]', // ! Ask button in the search bar

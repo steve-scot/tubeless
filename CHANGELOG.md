@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 (2.0.0 is a significance major: ad blocking is additive, not breaking.)
 
+## 2.6.0 - 2026-09-28
+
+### Added
+
+- **Hide music videos** also covers search results.
+- **Hide movies & shows** and **Hide member-only videos** also cover the
+  watch-page sidebar. The Buy/Rent panel on a film's own page is left alone.
+- **Hide gaming shelves** also covers Playables shown as a row of cards.
+- **Hide AI features** also hides the "Ask questions" slide in the mobile
+  comments carousel.
+- **Hide event banners** now hides "Explore more topics" on mobile YouTube.
+
+### Fixed
+
+- **Hide Mixes** on mobile YouTube no longer leaves a blank slot where a Mix
+  card sat in the Home grid.
+
 ## 2.5.0 - 2026-09-28
 
 ### Changed

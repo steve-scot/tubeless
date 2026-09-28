@@ -1,7 +1,7 @@
 {
   "name": "tubeless",
   "description": "YouTube, with the noise let out. Hide Shorts, games, banners, and feed clutter.",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "type": "module",
   "license": "MIT",
   "private": true,
