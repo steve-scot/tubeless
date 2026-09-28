@@ -6,6 +6,36 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 (2.0.0 is a significance major: ad blocking is additive, not breaking.)
 
+## 2.4.0 - 2026-09-28
+
+### Added
+
+- **Hide AI summary**, renamed **Hide AI summaries**, now also hides the AI
+  "Summary" rows under search results and the "Ask questions" section in a
+  video's description.
+
+- **Hide live streams** and **Hide Mixes** now also cover search results,
+  and **Hide playlists & podcasts** covers the newer search result cards.
+
+### Fixed
+
+- **Hide Mixes no longer hides ordinary videos.** YouTube now links many
+  music and long-form videos with a Mix-style URL, so the toggle was hiding
+  plain videos from Home. It now matches only cards with the stacked Mix
+  thumbnail.
+
+- **Hide live streams no longer hides uploads from a channel that is live.**
+  The channel avatar's live ring marks the channel, not the video, so every
+  video from a streaming channel was hidden. Only the thumbnail's LIVE badge
+  counts now.
+
+- **Hide member-only videos no longer hides fundraiser videos.** Both badges
+  share a style; only the members badge carries an icon, which is now
+  required.
+
+- **Hide comments** and **Hide recommendations** work again on mobile
+  YouTube, which had replaced both elements.
+
 ## 2.3.0 - 2026-08-23
 
 First release from the public repository.

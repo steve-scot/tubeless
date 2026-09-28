@@ -18,8 +18,8 @@
  *
  * Mobile YouTube (m.youtube.com) is a *separate* site with parallel
  * renderers prefixed `ytm-*` instead of `ytd-*`. Some classes are shared
- * across both (`.ytp-*` player chrome, the newer `.ytBadgeShape*` and
- * `.ytSpecAvatarShape*` view-model classes, all URL-based selectors).
+ * across both (`.ytp-*` player chrome, the newer `.ytBadgeShape*`
+ * view-model classes, all URL-based selectors).
  * Mobile-specific selectors below carry a "mobile" inline note; selectors
  * with no "mobile" note are desktop-only and simply don't match anything
  * when injected onto m.youtube.com (safe - CSS just no-ops). Toggles
@@ -136,7 +136,7 @@ export const SELECTORS = {
       'ytd-shelf-renderer', // ✓ legacy shelf
       'ytd-rich-section-renderer', // ✓ section wrapper (also on channel home - buildCss excludes channel pages)
       'ytd-chips-shelf-with-video-shelf-renderer', // ✓ "Explore more topics" pattern
-      'grid-shelf-view-model', // ? newer view-model grid shelf (no ytd- prefix; both platforms)
+      'grid-shelf-view-model', // ✓ newer view-model grid shelf (no ytd- prefix; both platforms)
       // Mobile shelf wrappers - same naming pattern, ytm- prefix.
       'ytm-rich-shelf-renderer', // ? mobile rich shelf
       'ytm-reel-shelf-renderer', // ✓ mobile Shorts shelf (uBlock confirmed)
@@ -161,11 +161,10 @@ export const SELECTORS = {
       'ytd-rich-section-renderer:has(ytd-rich-shelf-renderer[is-shorts])', // ✓ section wrapper
       'ytd-rich-section-renderer:has(ytd-reel-shelf-renderer)', // ✓ section wrapper
       'ytd-rich-section-renderer:has(grid-shelf-view-model a[href^="/shorts/"])', // ? section wrapper around view-model grid shelf
-      'grid-shelf-view-model:has(a[href^="/shorts/"])', // ? newer grid shelf used in some surfaces
+      'grid-shelf-view-model:has(a[href^="/shorts/"])', // ✓ search results Shorts shelf
       'ytd-video-renderer:has(a#thumbnail[href^="/shorts/"])', // ✓ search results Shorts card
       'ytd-rich-item-renderer:has(a[href^="/shorts/"])', // ✓ home/subs Shorts card
-      'ytm-shorts-lockup-view-model-v2', // ? mobile-style lockup occasionally used on web
-      'ytd-compact-video-renderer:has(a[href^="/shorts/"])', // ? sidebar Up-Next (out of feed scope, but harmless)
+      'ytm-shorts-lockup-view-model-v2', // ✓ Shorts card inside desktop grid shelves (search, channel)
       // Mobile (m.youtube.com). Lockup-view-model and reel-shelf are the
       // confirmed uBlock filters; the rich-item wrapper handles inline
       // Shorts cards in mobile feeds.
@@ -297,13 +296,11 @@ export const SELECTORS = {
 
     // ─── Hide member-only videos in feeds ──────────────────────────────
     // Current view-model badge: <badge-shape class="ytBadgeShapeCommerce">
-    // wrapping a child <div class="ytBadgeShapeText">Members only</div>.
-    // YouTube renamed ytBadgeShapeMembership → ytBadgeShapeCommerce and
-    // dropped the aria-label, so text-matching is no longer possible -
-    // the class itself is the only remaining structural hook. Commerce
-    // is broader than the old Membership name; if YouTube starts using
-    // it for other badges (e.g. paid-promotion disclosure), narrow this
-    // by co-occurrence with another marker.
+    // with a .ytBadgeShapeIcon (the membership star) and a
+    // .ytBadgeShapeText child ("Members only" / "Members first"). The text
+    // isn't CSS-matchable and the aria-label is usually absent. Commerce
+    // also styles the "Fundraiser" badge, which has no icon, so the icon
+    // child is what separates members-only from fundraisers.
     // YouTube ships two class systems for the same badge depending on
     // surface/experiment: the camel-case view-model classes
     // (ytBadgeShapeCommerce) and the wiz classes (badge-shape-wiz--commerce)
@@ -314,13 +311,13 @@ export const SELECTORS = {
     // hide videos the user can actually watch on channels they've joined
     // - the popup hint on this toggle documents that trade-off.
     hideMembersOnly: [
-      'ytd-rich-item-renderer:has(.ytBadgeShapeCommerce)', // ? current badge class
-      'ytd-video-renderer:has(.ytBadgeShapeCommerce)', // ? search results
-      'ytd-grid-video-renderer:has(.ytBadgeShapeCommerce)', // ? grid variant
+      'ytd-rich-item-renderer:has(.ytBadgeShapeCommerce > .ytBadgeShapeIcon)', // ✓ current badge class
+      'ytd-video-renderer:has(.ytBadgeShapeCommerce > .ytBadgeShapeIcon)', // ? search results
+      'ytd-grid-video-renderer:has(.ytBadgeShapeCommerce > .ytBadgeShapeIcon)', // ? grid variant
       // Wiz class-system variant of the same commerce badge
-      'ytd-rich-item-renderer:has(.badge-shape-wiz--commerce)', // ? wiz badge class
-      'ytd-video-renderer:has(.badge-shape-wiz--commerce)', // ? search results
-      'ytd-grid-video-renderer:has(.badge-shape-wiz--commerce)', // ? grid variant
+      'ytd-rich-item-renderer:has(.badge-shape-wiz--commerce > .badge-shape-wiz__icon)', // ! wiz badge class
+      'ytd-video-renderer:has(.badge-shape-wiz--commerce > .badge-shape-wiz__icon)', // ! search results
+      'ytd-grid-video-renderer:has(.badge-shape-wiz--commerce > .badge-shape-wiz__icon)', // ! grid variant
       // Legacy view-model class (pre-rename)
       'ytd-rich-item-renderer:has(.ytBadgeShapeMembership)', // ?
       'ytd-video-renderer:has(.ytBadgeShapeMembership)', // ?
@@ -330,10 +327,10 @@ export const SELECTORS = {
       'ytd-rich-item-renderer:has(.badge-style-type-members-only)', // ?
       // Mobile - the .ytBadgeShape* classes are shared view-model classes,
       // so only the outer wrapper needs ytm- variants.
-      'ytm-rich-item-renderer:has(.ytBadgeShapeCommerce)', // ? mobile members-only card
-      'ytm-video-with-context-renderer:has(.ytBadgeShapeCommerce)', // ? mobile search/feed
-      'ytm-rich-item-renderer:has(.badge-shape-wiz--commerce)', // ? mobile wiz badge card
-      'ytm-video-with-context-renderer:has(.badge-shape-wiz--commerce)', // ? mobile wiz search/feed
+      'ytm-rich-item-renderer:has(.ytBadgeShapeCommerce > .ytBadgeShapeIcon)', // ? mobile members-only card
+      'ytm-video-with-context-renderer:has(.ytBadgeShapeCommerce > .ytBadgeShapeIcon)', // ? mobile search/feed
+      'ytm-rich-item-renderer:has(.badge-shape-wiz--commerce > .badge-shape-wiz__icon)', // ! mobile wiz badge card
+      'ytm-video-with-context-renderer:has(.badge-shape-wiz--commerce > .badge-shape-wiz__icon)', // ! mobile wiz search/feed
       'ytm-rich-item-renderer:has(.ytBadgeShapeMembership)', // ? mobile legacy badge
     ],
 
@@ -372,14 +369,17 @@ export const SELECTORS = {
     ],
 
     // ─── Hide Mixes (auto-generated playlists) ─────────────────────────
-    // Mix playlists use URL prefix list=RD ("radio"). Cards may also use
-    // the dedicated ytd-radio-renderer.
+    // Mix playlists use URL prefix list=RD ("radio"), but YouTube also
+    // links ordinary music and long-form videos with list=RD…&start_radio=1,
+    // so the URL alone matches plain videos. A Mix card is a list=RD link
+    // plus the stacked collection thumbnail.
     hideMixes: [
-      'ytd-rich-item-renderer:has(a[href*="list=RD"])', // ? card-level
-      'ytd-radio-renderer', // ? dedicated mix renderer
-      'ytd-compact-radio-renderer', // ? sidebar variant
-      // Mobile - URL-based hook is identical; wrapper renames to ytm-.
-      'ytm-rich-item-renderer:has(a[href*="list=RD"])', // ? mobile mix card
+      'ytd-rich-item-renderer:has(yt-collection-thumbnail-view-model):has(a[href*="list=RD"])', // ✓ home/subs Mix card
+      'ytd-search yt-lockup-view-model:has(yt-collection-thumbnail-view-model):has(a[href*="list=RD"])', // ✓ search results Mix
+      'ytd-watch-next-secondary-results-renderer yt-lockup-view-model:has(yt-collection-thumbnail-view-model):has(a[href*="list=RD"])', // ✓ watch sidebar Mix
+      // Mobile - same list=RD overmatch, so require the collection
+      // thumbnail here too.
+      'ytm-rich-item-renderer:has(yt-collection-thumbnail-view-model):has(a[href*="list=RD"])', // ! mobile mix card
       'ytm-radio-renderer', // ! mobile dedicated mix renderer
     ],
 
@@ -388,11 +388,12 @@ export const SELECTORS = {
     // collection cards with a stacked thumbnail (yt-collection-thumbnail-
     // view-model) and a list=PL... URL. There's no CSS-detectable
     // distinction between the two, so a single toggle covers both.
-    // Note: this targets feed cards only, not sidenav playlist entries.
+    // Note: this targets feed and search cards only, not sidenav playlist
+    // entries.
     hideCollections: [
       'ytd-rich-item-renderer:has(yt-collection-thumbnail-view-model)', // ✓ stacked thumbnail
       'ytd-rich-item-renderer:has(a[href*="&list=PL"])', // ✓ playlist URL pattern
-      'ytd-playlist-renderer', // ? dedicated playlist renderer
+      'ytd-search yt-lockup-view-model:has(yt-collection-thumbnail-view-model)', // ✓ search results playlist/podcast
       'ytd-grid-playlist-renderer', // ? grid variant
       'ytd-podcast-renderer', // ? dedicated podcast renderer
       // Mobile - yt-collection-thumbnail-view-model is a shared view-model
@@ -424,22 +425,24 @@ export const SELECTORS = {
     ],
 
     // ─── Hide Live streams in feeds ────────────────────────────────────
-    // Live videos carry a "LIVE" badge in two places - the thumbnail
-    // bottom-right (badge-shape with ytBadgeShapeThumbnailLive class) and
-    // around the avatar (ytSpecAvatarShapeLiveBadge class). Either is a
-    // reliable structural marker. Old overlay-style="LIVE" pattern kept
-    // as a fallback for surfaces still using the legacy template.
+    // Live videos carry a "LIVE" badge on the thumbnail (badge-shape with
+    // ytBadgeShapeThumbnailLive in grids, ytBadgeShapeLive in search
+    // results). The avatar's live ring (ytSpecAvatarShapeLiveBadge) is
+    // NOT a marker: it means the channel is live right now and appears
+    // on that channel's ordinary uploads too. Old overlay-style="LIVE"
+    // pattern kept as a fallback for surfaces still using the legacy
+    // template.
     hideLive: [
       'ytd-rich-item-renderer:has(.ytBadgeShapeThumbnailLive)', // ✓ new badge class
-      'ytd-rich-item-renderer:has(.ytSpecAvatarShapeLiveBadge)', // ✓ avatar live badge
-      'ytd-video-renderer:has(.ytBadgeShapeThumbnailLive)', // ✓ search result variant
+      'ytd-video-renderer:has(.ytBadgeShapeLive)', // ✓ search result badge
+      'ytd-video-renderer:has(ytd-thumbnail[is-live-video])', // ✓ search result thumbnail attribute
+      'ytd-video-renderer:has(.ytBadgeShapeThumbnailLive)', // ? search result variant
       'ytd-rich-item-renderer:has(ytd-thumbnail-overlay-time-status-renderer[overlay-style="LIVE"])', // ? legacy
       'ytd-video-renderer:has(ytd-thumbnail-overlay-time-status-renderer[overlay-style="LIVE"])', // ? legacy
       'ytd-grid-video-renderer:has(ytd-thumbnail-overlay-time-status-renderer[overlay-style="LIVE"])', // ? legacy
       // Mobile - badge/avatar classes are shared view-model classes;
       // only the outer wrapper needs the ytm- prefix.
       'ytm-rich-item-renderer:has(.ytBadgeShapeThumbnailLive)', // ? mobile live badge
-      'ytm-rich-item-renderer:has(.ytSpecAvatarShapeLiveBadge)', // ? mobile avatar live badge
       'ytm-video-with-context-renderer:has(.ytBadgeShapeThumbnailLive)', // ? mobile search result variant
       // Legacy overlay-style attribute fallback, with ytm- prefix for the
       // mobile thumbnail overlay renderer.
@@ -566,13 +569,18 @@ export const SELECTORS = {
     ],
 
     // ─── Hide AI-generated video summary ───────────────────────────────
-    // YouTube's auto-generated summary block under the player. Two
-    // hooks: the bare #video-summary id (scoped to ytd-watch-flexy in
-    // case YT reuses the id elsewhere) and a [has-video-summary]
-    // attribute marker observed on the parent wrapper in some surfaces.
+    // YouTube's auto-generated "Summary" rows: in the watch-page
+    // description and under each search result. Both are an
+    // ytd-expandable-metadata-renderer carrying [has-video-summary];
+    // the same renderer without the attribute shows chapters, so the
+    // attribute is required. Unscoped because the search rows live
+    // outside ytd-watch-flexy. The description's "Ask questions" section
+    // is the same AI feature's entrypoint and goes with it.
     hideAISummary: [
-      'ytd-watch-flexy #video-summary', // ? scoped AI summary block
-      'ytd-watch-flexy [has-video-summary]', // ! attribute fallback - verify
+      'ytd-watch-flexy #video-summary', // ✓ scoped AI summary block
+      'ytd-expandable-metadata-renderer[has-video-summary]', // ✓ watch description + search results
+      'yt-video-description-youchat-section-view-model', // ✓ "Ask questions" section in the description
+      'ytm-expandable-metadata-renderer:has(.expandableMetadataRendererCollapsedLeftSectionSummary)', // ? mobile summary row (public filter lists)
     ],
 
     // ─── Hide fundraiser / donation shelf on watch pages ───────────────
@@ -605,11 +613,10 @@ export const SELECTORS = {
     // Single dedicated wrapper on watch pages.
     hideComments: [
       'ytd-comments#comments', // ✓
-      // Mobile inlines comments under the player via an "entry point"
-      // header which expands into a bottom sheet on tap. Hiding the
-      // header collapses the entrypoint entirely.
-      'ytm-comments-entry-point-header-renderer', // ? mobile comments entrypoint
-      'ytm-item-section-renderer:has(ytm-comments-entry-point-header-renderer)', // ! parent wrapper, defense in depth
+      // Mobile inlines a comments teaser card under the player which
+      // opens the comments bottom sheet on tap. Hiding the card removes
+      // the entrypoint entirely.
+      'yt-video-metadata-carousel-view-model:has(comments-entry-point-teaser-view-model)', // ✓ mobile comments teaser
     ],
 
     // ─── Hide the description block under the player ──────────────────
@@ -658,10 +665,9 @@ export const SELECTORS = {
       'ytd-watch-next-secondary-results-renderer', // ✓ the content
       'ytd-watch-flexy #secondary:not(:has(ytd-live-chat-frame:not([collapsed])))', // ✓ collapse column unless chat is expanded
       // Mobile shows recommendations inline below the player rather than
-      // in a sidebar. The renderer name varies by surface (related vs
-      // up-next), so include the broadest known wrappers.
-      'ytm-watch-next-secondary-results-renderer', // ! mobile recommendations (naming-pattern guess)
-      'ytm-item-section-renderer.related-items', // ! mobile related-items section (heuristic)
+      // in a sidebar.
+      'ytm-single-column-watch-next-results-renderer .related-items-container', // ✓ mobile related-items wrapper
+      'ytm-item-section-renderer[section-identifier="related-items"]', // ✓ mobile related-items section
     ],
   },
 
@@ -726,7 +732,7 @@ export const SELECTORS = {
       '.ytp-suggested-action', // ! cosmetic promo badge, may overmatch
 
       // ── Sponsored brand & shopping shelves ───────────────────────
-      'ytd-brand-video-shelf-renderer', // ? sponsored brand-content shelf
+      'ytd-brand-video-shelf-renderer', // ✓ sponsored brand-content shelf
       'ytd-brand-video-singleton-renderer', // ✓ singleton variant (confirmed in fanboy-annoyance)
       // Brand shelves arrive wrapped in a full-width rich-section grid row;
       // hiding only the inner shelf leaves the empty wrapper forcing a row
