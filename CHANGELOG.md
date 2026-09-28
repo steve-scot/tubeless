@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 (2.0.0 is a significance major: ad blocking is additive, not breaking.)
 
+## 2.4.1 - 2026-09-28
+
+### Fixed
+
+- **Toggles that relied on English labels now work in any language.** Hide
+  Shorts in the sidebar, Hide Create, the "You" section modes, and Share in
+  minimal action buttons matched YouTube's English text, so they did
+  nothing when YouTube was set to another language. They now match
+  structure and links instead; the English matches stay as a fallback.
+  Hide movies & shows also matches movie cards by their link rather than
+  the English channel label. Shelf matches by title (gaming, live events,
+  movies & shows) and Share on mobile YouTube remain English only.
+
 ## 2.4.0 - 2026-09-28
 
 ### Added

@@ -29,16 +29,21 @@
 export const SELECTORS = {
   sidenav: {
     // ─── Hide Shorts entry in left/mini sidenav ─────────────────────────
-    // Shorts entry no longer carries an href on its <a>; it uses
-    // JS-driven navigation. Match by title attribute instead.
+    // In the full sidenav the Shorts entry has no href (JS-driven
+    // navigation) and is the only [is-primary] entry without one; titles
+    // are localised ("ショート" in Japanese), so the title match only
+    // covers locales that keep the English brand name. The mini sidenav
+    // entry does carry /shorts/.
     //
     // Mobile YT has no left sidenav at all - the analogous concept is the
     // bottom pivot bar, and "Shorts" lives there as a pivot item. The user
     // intent ("hide the Shorts entrypoint") matches cleanly, so we extend
     // this toggle to also hide the mobile Shorts pivot button.
     hideShorts: [
-      'ytd-guide-entry-renderer:has(a#endpoint[title="Shorts"])', // ✓ full sidenav
-      'ytd-mini-guide-entry-renderer:has(a#endpoint[title="Shorts"])', // ✓ collapsed sidenav
+      'ytd-guide-entry-renderer[is-primary]:has(> a#endpoint:not([href]))', // ✓ full sidenav, any locale
+      'ytd-mini-guide-entry-renderer:has(a#endpoint[href^="/shorts"])', // ✓ collapsed sidenav, any locale
+      'ytd-guide-entry-renderer:has(a#endpoint[title="Shorts"])', // ✓ full sidenav, English title
+      'ytd-mini-guide-entry-renderer:has(a#endpoint[title="Shorts"])', // ✓ collapsed sidenav, English title
       'ytm-pivot-bar-item-renderer:has(.pivot-shorts)', // ✓ mobile bottom-nav Shorts button (uBlock confirmed)
     ],
 
@@ -64,30 +69,35 @@ export const SELECTORS = {
     ],
 
     // ─── "You" section: minimal mode (denylist) ────────────────────────
-    // Keep History, Playlists, Watch Later. Hide everything else inside
-    // the You section. Title-based matches are scoped to the You section
-    // to avoid collateral damage on other sidenav sections (e.g., the
-    // Subscriptions section also contains a Show more/less expander).
+    // Keep History, Playlists, Watch Later. Hide Your channel, Liked
+    // videos, Your videos, Downloads and the Show more expander. Titles
+    // are localised, so entries are matched by href: the user's own
+    // channel (/@handle or /channel/), list=LL, and Studio. Scoped to
+    // the You section, identified by its /feed/you header entry, to
+    // avoid collateral damage elsewhere (the Subscriptions section also
+    // has channel links and a Show more/less expander).
     youSectionMinimal: [
-      'ytd-guide-entry-renderer:has(a#endpoint[title="Your channel"])', // ✓
-      'ytd-guide-entry-renderer:has(a#endpoint[title="Your videos"])', // ✓
-      'ytd-guide-entry-renderer:has(a#endpoint[title="Liked videos"])', // ✓
+      'ytd-guide-collapsible-section-entry-renderer:has(#header-entry a#endpoint[href="/feed/you"]) ytd-guide-entry-renderer:not(#header-entry):has(> a#endpoint:is([href^="/@"], [href^="/channel/"], [href="/playlist?list=LL"], [href*="studio.youtube.com"]))', // ✓ Your channel, Liked videos, Your videos
       'ytd-guide-downloads-entry-renderer', // ✓ Downloads (own wrapper)
       // Show more / Show fewer expander, scoped to the You section only
-      'ytd-guide-collapsible-section-entry-renderer:has(a#endpoint[title="You"]) ytd-guide-collapsible-entry-renderer', // ✓
+      'ytd-guide-collapsible-section-entry-renderer:has(#header-entry a#endpoint[href="/feed/you"]) ytd-guide-collapsible-entry-renderer', // ✓
     ],
 
     // ─── "You" section: hidden mode ────────────────────────────────────
     // Hide the whole section wrapper. The You section is the only
-    // ytd-guide-section-renderer containing a header entry titled "You".
+    // ytd-guide-section-renderer whose header entry links to /feed/you
+    // (signed out, a plain primary "You" entry with the same href sits
+    // in the first section; the header-entry id excludes it).
     youSectionHidden: [
-      'ytd-guide-section-renderer:has(ytd-guide-entry-renderer[id="header-entry"] a#endpoint[title="You"])', // ✓
+      'ytd-guide-section-renderer:has(ytd-guide-entry-renderer[id="header-entry"] a#endpoint[href="/feed/you"])', // ✓
     ],
   },
 
   masthead: {
     // ─── Hide "Create" button in masthead (top right) ──────────────────
-    // The button-renderer wraps an inner <button aria-label="Create">.
+    // The aria-label is localised. Structurally, Create is the only
+    // ytd-button-renderer among the masthead buttons when signed in;
+    // signed out the only one is Sign in, which links to ServiceLogin.
     // Scoped to ytd-masthead so we don't hit any unrelated "Create"
     // buttons elsewhere (e.g., on Studio pages).
     //
@@ -95,7 +105,8 @@ export const SELECTORS = {
     // central + icon), not the top bar. Pivot-bar items expose semantic
     // hooks like `.pivot-create` similar to `.pivot-shorts`.
     hideCreate: [
-      'ytd-masthead ytd-button-renderer:has(button[aria-label="Create"])', // ✓
+      'ytd-masthead #buttons > ytd-button-renderer:not(:has(a[href*="ServiceLogin"]))', // ✓ any locale
+      'ytd-masthead ytd-button-renderer:has(button[aria-label="Create"])', // ✓ English label
       'ytm-pivot-bar-item-renderer:has(.pivot-create)', // ? mobile bottom-nav Create
     ],
 
@@ -177,10 +188,13 @@ export const SELECTORS = {
 
     // ─── Hide Games shelf in feeds ──────────────────────────────────────
     // Gaming shelves appear on home as a rich shelf with a games icon/title.
-    // YouTube doesn't expose a clean attribute for "this is gaming"; we
-    // match by the shelf's title text. brittle - likely needs tuning.
+    // Filter lists report an [is-gaming] attribute on the "Top live games"
+    // shelf; otherwise we match by the shelf's title text, which is
+    // English only. brittle - likely needs tuning.
     hideGames: [
-      // Title-based: shelf header contains the word "Gaming" or "Games".
+      'ytd-rich-shelf-renderer[is-gaming]', // ! attribute reported by filter lists
+      'ytd-rich-section-renderer:has(ytd-rich-shelf-renderer[is-gaming])', // ! section wrapper
+      // Title-based (English only): shelf header contains "Gaming" or "Games".
       'ytd-rich-shelf-renderer:has(#title-text:is([title*="Gaming"], [title*="Games"]))', // !
       'ytd-rich-section-renderer:has(#title:is([title*="Gaming"], [title*="Games"]))', // !
       // Specific known shelf: "Recommended games" / "Trending games"
@@ -224,7 +238,8 @@ export const SELECTORS = {
       'ytd-statement-banner-renderer', // ✓ election/news/statement banner (confirmed in fanboy-annoyance + AdGuard)
       'ytd-emergency-onebox-renderer', // ✓ emergency banner (confirmed in uBO community list)
       'ytd-rich-section-renderer:has(ytd-statement-banner-renderer, ytd-emergency-onebox-renderer)', // ? section wrapper around banner
-      // Live event hero: rich shelf with chip "Live now" / "Premieres"
+      // Live event hero: rich shelf with chip "Live now" / "Premieres".
+      // Title matches here are English only.
       'ytd-rich-shelf-renderer:has(#title-text[title*="Live" i])', // !
       'ytd-rich-shelf-renderer:has(#title-text[title*="Breaking news" i])', // !
       // Section wrapper around a nested live/news shelf. :has() can't nest,
@@ -273,17 +288,19 @@ export const SELECTORS = {
     //      are normal ytd-rich-item-renderer wrappers but carry an avatar
     //      labelled "YouTube Movies" and a watch URL with pp=sAQB.
     hideMovies: [
-      // Shelves (legacy - duplicated by hideShelves master).
+      // Shelves (legacy - duplicated by hideShelves master). Title
+      // matches are English only.
       'ytd-rich-shelf-renderer:has(#title-text[title*="Movies" i])', // !
       'ytd-rich-shelf-renderer:has(#title-text[title*="movie" i])', // !
       'ytd-rich-shelf-renderer:has(#title-text[title*="Shows" i])', // !
       // Section wrapper around a nested movie/show shelf. :has() can't nest,
       // so match the shelf's title-text from the wrapper directly.
       'ytd-rich-section-renderer:has(#title-text:is([title*="movie" i], [title*="Shows" i]))', // !
-      // Individual movie cards in the grid. Avatar aria-label is the
-      // most stable hook; URL param pp=sAQB is a redundant backup.
-      'ytd-rich-item-renderer:has([aria-label="Go to channel YouTube Movies"])', // ✓
-      'ytd-rich-item-renderer:has(a#video-title-link[href*="pp=sAQB"])', // ? URL marker backup
+      // Individual movie cards in the grid. Every YouTube Movies link
+      // carries pp=sAQB (sidebar lockups and storefront alike), which is
+      // locale-independent; the avatar aria-label is English only.
+      'ytd-rich-item-renderer:has(a[href*="pp=sAQB"])', // ? URL marker, any locale
+      'ytd-rich-item-renderer:has([aria-label="Go to channel YouTube Movies"])', // ✓ English label
       // Mobile equivalents. The aria-label hook is platform-independent
       // (YouTube Movies channel is the same entity on both sites). The
       // pp=sAQB URL marker is also identical across platforms.
@@ -514,8 +531,11 @@ export const SELECTORS = {
       // unsubscribe path (verified absent on current YT).
       // Ask (AI chat) - YouTube's own .you-chat-entrypoint-button class.
       'ytd-watch-metadata yt-button-view-model:has(.you-chat-entrypoint-button)', // ✓
-      // Share button.
-      'ytd-watch-metadata yt-button-view-model:has(button[aria-label="Share"])', // ✓ aria-label match
+      // Share button. Its aria-label is localised; structurally it is
+      // the only yt-button-view-model directly in the top-level row
+      // (Save and Ask sit in #flexible-item-buttons).
+      'ytd-watch-metadata #top-level-buttons-computed > yt-button-view-model', // ✓ any locale
+      'ytd-watch-metadata yt-button-view-model:has(button[aria-label="Share"])', // ✓ English label
       // Kebab (More actions) - IMPORTANT: ytd-menu-renderer in the
       // action row wraps EVERYTHING (Like/Dislike, Share, Ask, AND the
       // kebab). Targeting the renderer would also nuke Like/Dislike.
@@ -524,8 +544,9 @@ export const SELECTORS = {
       // with id="button-shape".
       'ytd-watch-metadata #menu ytd-menu-renderer > yt-icon-button.dropdown-trigger', // ✓
       'ytd-watch-metadata #menu ytd-menu-renderer > yt-button-shape#button-shape', // ✓
-      // Mobile - best-effort, aria-label-based hooks.
-      'ytm-slim-video-metadata-section-renderer button[aria-label="Share"]', // ! mobile Share chip
+      // Mobile - best-effort, aria-label-based hooks. English only: the
+      // mobile action bar's buttons have no structural distinction.
+      'ytm-slim-video-metadata-section-renderer button[aria-label="Share"]', // ✓ mobile Share, English label
       'ytm-slim-video-metadata-section-renderer button[aria-label*="more actions" i]', // ! mobile kebab
       'ytm-slim-video-metadata-section-renderer .you-chat-entrypoint-button', // ! mobile Ask (if rolled out)
     ],
