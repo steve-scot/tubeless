@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 (2.0.0 is a significance major: ad blocking is additive, not breaking.)
 
+## 2.5.0 - 2026-09-28
+
+### Changed
+
+- **Hide AI summaries is now Hide AI features**, in its own AI section of
+  the popup. Existing on/off choices carry over.
+
+### Added
+
+- **Hide AI features** also covers Ask YouTube in the search bar (the Ask
+  button, its suggestions and the AI mode chip on search results), the
+  custom feed chip on Home, and the "ask for videos any way you like" Home
+  prompt. These are US-only for now, so their selectors come from public
+  filter lists and are untested.
+
 ## 2.4.1 - 2026-09-28
 
 ### Fixed

@@ -104,8 +104,6 @@ export function buildCss(settings: Settings): string {
       'ytd-watch-flexy[theater][live-chat-present-and-expanded] { --ytd-watch-flexy-sidebar-width: 0px !important; }\n',
     );
   }
-  if (settings.watchPage.hideAISummary)
-    parts.push(rule(SELECTORS.watchPage.hideAISummary));
   if (settings.watchPage.hideFundraiser)
     parts.push(rule(SELECTORS.watchPage.hideFundraiser));
   if (settings.watchPage.hideEndScreenCards)
@@ -138,6 +136,9 @@ export function buildCss(settings: Settings): string {
     // so the masthead and miniplayer still anchor to the viewport.
     parts.push('ytd-app { overflow-x: clip !important; }\n');
   }
+
+  // AI (stored under watchPage for compatibility, see settings.ts)
+  if (settings.watchPage.hideAISummary) parts.push(rule(SELECTORS.ai.hideFeatures));
 
   // Ads
   if (settings.ads.hideAll) parts.push(rule(SELECTORS.ads.hideAll));

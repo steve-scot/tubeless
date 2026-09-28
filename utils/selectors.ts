@@ -589,21 +589,6 @@ export const SELECTORS = {
       'ytm-live-chat-frame', // ! mobile live chat (naming-pattern guess)
     ],
 
-    // ─── Hide AI-generated video summary ───────────────────────────────
-    // YouTube's auto-generated "Summary" rows: in the watch-page
-    // description and under each search result. Both are an
-    // ytd-expandable-metadata-renderer carrying [has-video-summary];
-    // the same renderer without the attribute shows chapters, so the
-    // attribute is required. Unscoped because the search rows live
-    // outside ytd-watch-flexy. The description's "Ask questions" section
-    // is the same AI feature's entrypoint and goes with it.
-    hideAISummary: [
-      'ytd-watch-flexy #video-summary', // ✓ scoped AI summary block
-      'ytd-expandable-metadata-renderer[has-video-summary]', // ✓ watch description + search results
-      'yt-video-description-youchat-section-view-model', // ✓ "Ask questions" section in the description
-      'ytm-expandable-metadata-renderer:has(.expandableMetadataRendererCollapsedLeftSectionSummary)', // ? mobile summary row (public filter lists)
-    ],
-
     // ─── Hide fundraiser / donation shelf on watch pages ───────────────
     // Appears on creator livestreams running a fundraiser. Renders in
     // the #secondary column alongside the chat/recommendations panel.
@@ -791,6 +776,42 @@ export const SELECTORS = {
       'ytm-product-list-renderer', // ! mobile product list
       'ytm-banner-promo-renderer', // ! mobile banner promo
       'ytm-mealbar-promo-renderer', // ! mobile mealbar (Premium upsell)
+    ],
+  },
+
+  ai: {
+    // ─── Hide AI features ───────────────────────────────────────────────
+    // Every AI surface outside the watch-page action row (the Ask button
+    // there belongs to actionRowMinimal).
+    //
+    // Summaries: the auto-generated "Summary" rows in the watch-page
+    // description and under each search result. Both are an
+    // ytd-expandable-metadata-renderer carrying [has-video-summary]; the
+    // same renderer without the attribute shows chapters, so the
+    // attribute is required. Unscoped because the search rows live
+    // outside ytd-watch-flexy.
+    //
+    // Ask YouTube (conversational search), custom feeds and the "ask
+    // for videos" home prompt are US-only at the time of writing; their
+    // selectors come from public filter lists and are unverified here.
+    hideFeatures: [
+      'ytd-watch-flexy #video-summary', // ✓ scoped AI summary block
+      'ytd-expandable-metadata-renderer[has-video-summary]', // ✓ watch description + search results
+      'yt-video-description-youchat-section-view-model', // ✓ "Ask questions" section in the description
+      'ytm-expandable-metadata-renderer:has(.expandableMetadataRendererCollapsedLeftSectionSummary)', // ? mobile summary row (public filter lists)
+      // Ask YouTube: button inside the search bar, its suggestion panel,
+      // and the AI mode chip on search results.
+      '.ytSearchboxComponentActions > .ytSearchboxComponentActionsButton[client-ve-type]', // ! Ask button in the search bar
+      '.ytSearchboxComponentAiSuggestionsContainer', // ! Ask suggestions under the search bar
+      'yt-chip-cloud-chip-renderer[chip-style="STYLE_AI_MODE_CHIP"]', // ! AI mode chip on search results
+      // Custom feeds: a prompt-built feed, offered as a chip with a
+      // leading sparkle icon at the start of the Home chip bar. Plain
+      // topic chips carry no start icon.
+      'ytd-feed-filter-chip-bar-renderer yt-chip-cloud-chip-renderer:has(.ytChipShapeStartIconPadding)', // ! custom feed chip
+      // "Ask for videos any way you like" prompt on Home.
+      'ytd-talk-to-recs-flow-renderer', // ! home prompt
+      'ytd-rich-section-renderer:has(ytd-talk-to-recs-flow-renderer)', // ! section wrapper
+      'ytd-rich-item-renderer:has(ytd-talk-to-recs-flow-renderer)', // ! grid cell wrapper
     ],
   },
 

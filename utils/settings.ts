@@ -40,6 +40,8 @@ export type Settings = {
     actionRow: ActionRowMode;
     hideMerch: boolean;
     hideLiveChat: boolean;
+    // Drives the "Hide AI features" toggle, which covers every AI surface,
+    // not only the watch page. Renaming the key would need a migration.
     hideAISummary: boolean;
     hideFundraiser: boolean;
     hideEndScreenCards: boolean;
