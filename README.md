@@ -3,7 +3,7 @@
   <img src="docs/tubeless.svg#gh-dark-mode-only" alt="Tubeless" width="300">
 </p>
 
-<p align="center"><em>YouTube, with the noise let out.</em></p>
+<p align="center"><em>YouTube, quieter.</em></p>
 
 <p align="center">
   <a href="https://addons.mozilla.org/firefox/addon/tubeless/"><img alt="Firefox Add-ons version" src="https://img.shields.io/amo/v/tubeless?label=firefox&logo=firefoxbrowser&logoColor=white&color=DC4F2A"></a>
@@ -12,17 +12,16 @@
   <a href="LICENSE"><img alt="Licence: MIT" src="https://img.shields.io/badge/licence-MIT-1C1812"></a>
 </p>
 
-<p align="center"><b><a href="https://addons.mozilla.org/firefox/addon/tubeless/">Install for Firefox</a> · <a href="https://chromewebstore.google.com/detail/tubeless/majebohkonlfnedomfjnjaaeioiooolg">Install for Chrome</a></b></p>
+<p align="center"><b><a href="https://addons.mozilla.org/firefox/addon/tubeless/">Install for Firefox</a> · <a href="https://chromewebstore.google.com/detail/tubeless/majebohkonlfnedomfjnjaaeioiooolg">Install for Chrome</a> · <a href="https://tubeless.app">tubeless.app</a></b></p>
 
 <p align="center">
   <img src="docs/screenshots/popup.webp" alt="The Tubeless popup open over a YouTube video, with switches grouped under Sidebar, Top bar and Home shelves" width="800">
 </p>
 
-A browser extension for Firefox and Chrome that hides Shorts, recommended-game
-shelves, event banners, sponsored in-feed slots, end-screen cards, the AI "Ask"
-button, and other curation noise on YouTube. Each toggle is independent and
-configurable from the popup. Pause the whole thing with one switch when you
-want plain YouTube back.
+Tubeless is a small extension for Firefox and Chrome that hides the parts of
+YouTube you'd rather not see. Shorts, ads, recommendation shelves, end-screen
+cards, comments: each one has its own switch in the popup, and one more brings
+plain YouTube back.
 
 Works on desktop and on Firefox for Android.
 
@@ -43,15 +42,17 @@ Works on desktop and on Firefox for Android.
   </tr>
 </table>
 
-Everything is a switch in the popup, grouped by where it appears:
+Every switch works on its own, and sensible ones are on from the start. They
+are grouped in the popup by where they appear:
 
 - **Sidebar**: Shorts, Explore, "More from YouTube", and the "You" section
   (full, minimal or hidden).
 - **Top bar**: the Create button, the notifications bell and the filter chips.
-- **Feeds**: every shelf at once, or gaming shelves, event banners, promo
-  banners and feed nudges one by one. Shorts, movies and shows, community
-  posts, Mixes, playlists and podcasts, live streams, music videos,
-  member-only videos and Premieres.
+- **Feeds**: on Home, Subscriptions and search results, every shelf at once,
+  or gaming shelves, event, alert and promo banners and feed nudges one by
+  one. Shorts, movies and shows, community posts, Mixes, playlists and
+  podcasts, live streams, music videos, member-only videos and Premieres.
+  Channel pages are never filtered.
 - **Watch page**: a trimmed row of action buttons, the merch and fundraiser
   shelves, live chat, end-screen cards, the description, comments, the
   recommendations sidebar and info panels.
@@ -67,10 +68,10 @@ Everything is a switch in the popup, grouped by where it appears:
 I've been a YouTube Premium subscriber for many years. Despite this, my YouTube
 feed was still cluttered with things I didn't want to see. Shorts all over the
 place, "Most relevant" sections, "Explore more topics" sections, "How are we
-doing" survey blocks, more Shorts, the list goes on.
+doing?" survey blocks, more Shorts, the list goes on.
 
-I tried numerous other plugins, most helped, but none of them got rid of all of
-it, so I created Tubeless to solve the problem. I've been using it full time
+I tried numerous other extensions. Most helped, but none of them got rid of all
+of it, so I created Tubeless to solve the problem. I've been using it full time
 for many months with extensive YouTube browsing, and I'm constantly tweaking it.
 
 ## Install
@@ -83,7 +84,7 @@ Or [build from source](#building-from-source).
 ## How it works
 
 Tubeless is a thin content script that injects a single `<style>` element into
-youtube.com. Every toggle in the popup maps to a CSS rule that hides specific
+youtube.com. Every switch in the popup maps to a CSS rule that hides specific
 elements via `display: none`. There is no DOM mutation, no MutationObservers,
 no background workers doing real work, and no remote code.
 
