@@ -1,6 +1,22 @@
-# Tubeless
+<p align="center">
+  <img src="docs/tubeless-light.svg#gh-light-mode-only" alt="Tubeless" width="300">
+  <img src="docs/tubeless.svg#gh-dark-mode-only" alt="Tubeless" width="300">
+</p>
 
-> YouTube, with the noise let out.
+<p align="center"><em>YouTube, with the noise let out.</em></p>
+
+<p align="center">
+  <a href="https://addons.mozilla.org/firefox/addon/tubeless/"><img alt="Firefox Add-ons version" src="https://img.shields.io/amo/v/tubeless?label=firefox&logo=firefoxbrowser&logoColor=white&color=DC4F2A"></a>
+  <a href="https://chromewebstore.google.com/detail/tubeless/majebohkonlfnedomfjnjaaeioiooolg"><img alt="Chrome Web Store version" src="https://img.shields.io/chrome-web-store/v/majebohkonlfnedomfjnjaaeioiooolg?label=chrome&logo=googlechrome&logoColor=white&color=DC4F2A"></a>
+  <a href="#privacy"><img alt="Data collected: none" src="https://img.shields.io/badge/data%20collected-none-1C1812"></a>
+  <a href="LICENSE"><img alt="Licence: MIT" src="https://img.shields.io/badge/licence-MIT-1C1812"></a>
+</p>
+
+<p align="center"><b><a href="https://addons.mozilla.org/firefox/addon/tubeless/">Install for Firefox</a> · <a href="https://chromewebstore.google.com/detail/tubeless/majebohkonlfnedomfjnjaaeioiooolg">Install for Chrome</a></b></p>
+
+<p align="center">
+  <img src="docs/screenshots/popup.webp" alt="The Tubeless popup open over a YouTube video, with switches grouped under Sidebar, Top bar and Home shelves" width="800">
+</p>
 
 A browser extension for Firefox and Chrome that hides Shorts, recommended-game
 shelves, event banners, sponsored in-feed slots, end-screen cards, the AI "Ask"
@@ -9,6 +25,42 @@ configurable from the popup. Pause the whole thing with one switch when you
 want plain YouTube back.
 
 Works on desktop and on Firefox for Android.
+
+## What it hides
+
+<table>
+  <tr>
+    <th width="50%">Without Tubeless</th>
+    <th width="50%">With Tubeless</th>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/home-before.webp" alt="YouTube home page without Tubeless: a sponsored video, a Shorts shelf, Shorts in the sidebar and a row of filter chips"></td>
+    <td><img src="docs/screenshots/home-after.webp" alt="The same home page with Tubeless: only a grid of ordinary videos"></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/watch-before.webp" alt="YouTube watch page without Tubeless: a sponsored product, the recommendations sidebar, the description and a row of action buttons"></td>
+    <td><img src="docs/screenshots/watch-after.webp" alt="The same watch page with Tubeless: the video, its title and channel, and a trimmed row of buttons"></td>
+  </tr>
+</table>
+
+Everything is a switch in the popup, grouped by where it appears:
+
+- **Sidebar**: Shorts, Explore, "More from YouTube", and the "You" section
+  (full, minimal or hidden).
+- **Top bar**: the Create button, the notifications bell and the filter chips.
+- **Feeds**: every shelf at once, or gaming shelves, event banners, promo
+  banners and feed nudges one by one. Shorts, movies and shows, community
+  posts, Mixes, playlists and podcasts, live streams, music videos,
+  member-only videos and Premieres.
+- **Watch page**: a trimmed row of action buttons, the merch and fundraiser
+  shelves, live chat, end-screen cards, the description, comments, the
+  recommendations sidebar and info panels.
+- **AI**: video summaries, "Ask questions", Ask YouTube in the search bar and
+  custom feed prompts.
+- **Ads**: sponsored slots, display and companion ads, brand shelves, Premium
+  upsells and the ad overlays on the player. This is cosmetic: an ad that
+  plays inside the video still plays.
+- **Popups**: survey and feedback prompts, in dialogs and in the feed.
 
 ## Why
 
@@ -26,7 +78,7 @@ for many months with extensive YouTube browsing, and I'm constantly tweaking it.
 - **Firefox**: [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/tubeless/)
 - **Chrome**: [Chrome Web Store](https://chromewebstore.google.com/detail/tubeless/majebohkonlfnedomfjnjaaeioiooolg)
 
-Or build from source below.
+Or [build from source](#building-from-source).
 
 ## How it works
 
@@ -45,6 +97,14 @@ When YouTube ships a redesign, that's the file to edit.
 - The only permission requested is `storage`, used to persist your settings
   (synced through your own browser account, nowhere else).
 - The manifest declares `data_collection_permissions: ['none']`.
+
+## Reporting a problem
+
+YouTube changes its pages often, and a change can bring back something
+Tubeless used to hide, or hide something it shouldn't. Open an
+[issue](https://github.com/steve-scot/tubeless/issues) saying which page it
+was, what you saw, your browser and the Tubeless version from the popup. A
+screenshot helps.
 
 ## Building from source
 
@@ -74,12 +134,15 @@ utils/
   buildCss.ts         Composes the injected CSS from current settings
   settings.ts         Settings schema, defaults, and storage migration
 assets/
-  icon.svg            Source icon - rasterized to PNG icons at build time
+  icon.svg            Source icon - rasterised to PNG icons at build time
 wxt.config.ts         WXT/manifest configuration
 ```
 
 Built with [WXT](https://wxt.dev).
 
-## License
+## Licence
 
 [MIT](./LICENSE).
+
+Tubeless is an independent project, not affiliated with or endorsed by YouTube
+or Google.
