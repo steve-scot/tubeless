@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 (2.0.0 is a significance major: ad blocking is additive, not breaking.)
 
-## 2.6.0 - 2026-09-28
+## 2.6.0 - 2026-10-12
 
 ### Added
 
@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Hide Mixes** on mobile YouTube no longer leaves a blank slot where a Mix
   card sat in the Home grid.
+- **Hide filter chips** on mobile YouTube no longer leaves a blank band
+  between the header and the feed.
 
 ## 2.5.0 - 2026-09-28
 

@@ -386,12 +386,13 @@ export const SELECTORS = {
     // ─── Hide feed filter chip bar (Home / Subscriptions) ──────────────
     // The horizontal "All / Gaming / Music / …" chip bar at the top of
     // home and subscriptions feeds. Note: hiding this also requires a
-    // height override on #frosted-glass.with-chipbar (handled in
-    // buildCss), otherwise a blank gap or - if hidden outright - the
-    // masthead loses its backdrop entirely.
+    // height override on #frosted-glass.with-chipbar and a margin override
+    // on the mobile .rich-grid-sticky-header (both handled in buildCss),
+    // otherwise a blank gap or - if hidden outright - the masthead loses
+    // its backdrop entirely.
     hideFilterChips: [
       'ytd-feed-filter-chip-bar-renderer', // ✓
-      'ytm-feed-filter-chip-bar-renderer', // ? mobile feed filter chip bar (naming-pattern parallel)
+      'ytm-feed-filter-chip-bar-renderer', // ✓ mobile feed filter chip bar
     ],
 
     // ─── Hide Mixes (auto-generated playlists) ─────────────────────────

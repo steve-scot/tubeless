@@ -50,6 +50,12 @@ export function buildCss(settings: Settings): string {
     // for it. 56px matches YouTube's masthead-only height (the value of
     // --ytd-rich-grid-chips-bar-top).
     parts.push('#frosted-glass.with-chipbar { height: 56px !important; }\n');
+    // Mobile equivalent: the chip bar is fixed over the feed, and its
+    // wrapper keeps a 50px bottom margin (a 50px height on hashtag pages)
+    // to clear it, which stays behind as a blank band.
+    parts.push(
+      '.rich-grid-sticky-header:has(> ytm-feed-filter-chip-bar-renderer) { margin-bottom: 0 !important; height: auto !important; }\n',
+    );
   }
 
   // Home shelves
