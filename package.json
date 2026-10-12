@@ -1,6 +1,6 @@
 {
   "name": "tubeless",
-  "description": "YouTube, with the noise let out. Hide Shorts, games, banners, and feed clutter.",
+  "description": "YouTube, quieter. Hide Shorts, ads, recommendation shelves, comments and more, each with its own switch. No tracking, no requests.",
   "version": "2.6.0",
   "type": "module",
   "license": "MIT",

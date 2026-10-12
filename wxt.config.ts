@@ -25,7 +25,7 @@ export default defineConfig({
   manifest: ({ browser }) => ({
     name: 'Tubeless',
     description:
-      'YouTube, with the noise let out. Hide Shorts, games, banners, and feed clutter.',
+      'YouTube, quieter. Hide Shorts, ads, recommendation shelves, comments and more, each with its own switch. No tracking, no requests.',
     permissions: ['storage'],
     ...(browser === 'firefox' && {
       browser_specific_settings: {
