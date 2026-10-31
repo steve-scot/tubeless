@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Hide movies & shows** now also hides films in search results.
 - Clicking the top of the video player now pauses and plays again. YouTube's
   player leaves an invisible strip there that swallows clicks; Tubeless lets
   them through while the Tubeless switch is on. The buttons in that corner

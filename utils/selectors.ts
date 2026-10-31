@@ -285,13 +285,14 @@ export const SELECTORS = {
     ],
 
     // ─── Hide Movies / Shows in feeds ──────────────────────────────────
-    // Three surfaces:
+    // Four surfaces:
     //   1. Shelves with "Movies" / "Shows" in the title (covered by the
     //      master hideShelves toggle, but kept here as a fallback).
     //   2. Individual movie cards interleaved into the home grid. These
     //      are normal ytd-rich-item-renderer wrappers but carry an avatar
     //      labelled "YouTube Movies" and a watch URL with pp=sAQB.
     //   3. The same film cards in the watch-page sidebar.
+    //   4. Film results in search, which have their own renderer.
     // The Buy/Rent panel on a film's own watch page (#offer-module) is
     // deliberately left alone: it's how you rent the film you opened.
     hideMovies: [
@@ -309,6 +310,7 @@ export const SELECTORS = {
       'ytd-rich-item-renderer:has(a[href*="pp=sAQB"])', // ? URL marker, any locale
       'ytd-rich-item-renderer:has([aria-label="Go to channel YouTube Movies"])', // ✓ English label
       'ytd-watch-next-secondary-results-renderer yt-lockup-view-model:has(a[href*="pp=sAQB"])', // ✓ watch sidebar ("Free with ads" films)
+      'ytd-search ytd-movie-renderer', // ✓ search results ("Buy or rent" films)
       // Mobile equivalents. The aria-label hook is platform-independent
       // (YouTube Movies channel is the same entity on both sites). The
       // pp=sAQB URL marker is also identical across platforms.
