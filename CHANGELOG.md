@@ -10,9 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- New installs start with the "You" section set to minimal, and with live
-  chat, fundraiser shelves and info panels hidden. Existing settings are
-  unchanged.
+- The "You" section is now minimal by default, and live chat, fundraiser
+  shelves and info panels are hidden by default. This applies to new
+  installs and to anyone who has never changed a setting. If you have
+  ever changed a setting, all your settings stay as they were.
 
 ### Fixed
 
