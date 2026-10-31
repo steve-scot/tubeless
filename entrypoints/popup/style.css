@@ -30,8 +30,12 @@ html, body { margin: 0; padding: 0; overflow-x: hidden; }
   --select-arrow: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'><path fill='%236E634F' d='M5 7L1 3h8z'/></svg>");
 }
 
+/* Keep scrollbars and native controls in step with a manual override. */
+:root[data-theme="light"] { color-scheme: light; }
+
 /* Dark tokens - manual override */
 :root[data-theme="dark"] {
+  color-scheme: dark;
   --paper: #191919;
   --surface: #20201F;
   --surface-2: #2A2929;
