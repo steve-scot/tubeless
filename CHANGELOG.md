@@ -14,6 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   chat, fundraiser shelves and info panels hidden. Existing settings are
   unchanged.
 
+### Fixed
+
+- Clicking the top of the video player now pauses and plays again. YouTube's
+  player leaves an invisible strip there that swallows clicks; Tubeless lets
+  them through while the Tubeless switch is on. The buttons in that corner
+  still work.
+
 ## 2.6.0 - 2026-10-12
 
 ### Added

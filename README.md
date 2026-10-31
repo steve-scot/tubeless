@@ -63,6 +63,10 @@ are grouped in the popup by where they appear:
   plays inside the video still plays.
 - **Popups**: survey and feedback prompts, in dialogs and in the feed.
 
+One fix is always on and has no switch: YouTube's player leaves an invisible
+strip across the top of the video that swallows clicks, so clicking there
+doesn't pause or play. Tubeless lets those clicks through to the video.
+
 ## Why
 
 I've been a YouTube Premium subscriber for many years. Despite this, my YouTube
@@ -85,7 +89,8 @@ Or [build from source](#building-from-source).
 
 Tubeless is a thin content script that injects a single `<style>` element into
 youtube.com. Every switch in the popup maps to a CSS rule that hides specific
-elements via `display: none`. There is no DOM mutation, no MutationObservers,
+elements via `display: none`, plus one always-on rule that fixes the player's
+dead click strip. There is no DOM mutation, no MutationObservers,
 no background workers doing real work, and no remote code.
 
 The full set of selectors lives in [`utils/selectors.ts`](./utils/selectors.ts),

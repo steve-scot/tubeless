@@ -27,6 +27,14 @@ export function buildCss(settings: Settings): string {
 
   const parts: string[] = [];
 
+  // Always on: a YouTube player bug rather than clutter. The top-right
+  // button container is larger than its buttons, and its empty area
+  // swallows clicks that should reach the video and toggle playback.
+  parts.push(
+    '.ytp-chrome-top-buttons { pointer-events: none !important; }\n' +
+      '.ytp-chrome-top-buttons > * { pointer-events: auto !important; }\n',
+  );
+
   if (settings.sidenav.hideShorts) parts.push(rule(SELECTORS.sidenav.hideShorts));
   if (settings.sidenav.hideExplore) parts.push(rule(SELECTORS.sidenav.hideExplore));
   if (settings.sidenav.hideMoreFromYouTube)
