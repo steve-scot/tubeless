@@ -89,6 +89,19 @@ body {
   line-height: 1.4;
 }
 
+/* Safari grows the popup to fit its content; once that passes its height
+   cap, scrolling the popover is intermittently dead and shows no scroll
+   bar. A fixed box with body as the scroller avoids it. */
+:root.safari { height: 600px; overflow: hidden; }
+:root.safari body { height: 100%; overflow-y: auto; }
+
+/* iPhone shows the popup as a sheet wider than the popover: fill it and let
+   the page scroll normally. */
+@media (min-width: 361px) {
+  :root.safari { height: auto; overflow: visible; }
+  :root.safari body { width: auto; height: auto; overflow: visible; }
+}
+
 .popup {
   display: flex;
   flex-direction: column;

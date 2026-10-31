@@ -19,6 +19,20 @@ export default defineConfig({
     // only matches at the repo root, so exclude the directory itself.
     excludeSources: ['*.zip', '*.xpi', 'docs/**', 'releases/**'],
   },
+  // Marks the popup's <html> on Safari builds before first paint, for the
+  // Safari-only layout in popup/style.css.
+  vite: ({ browser }) => ({
+    plugins:
+      browser === 'safari'
+        ? [
+            {
+              name: 'tubeless:safari-class',
+              transformIndexHtml: (html: string) =>
+                html.replace('<html', '<html class="safari"'),
+            },
+          ]
+        : [],
+  }),
   // Per-browser manifest: the Gecko-only `browser_specific_settings` block is
   // emitted for Firefox only, keeping the Chrome manifest free of keys Chrome
   // merely ignores.
