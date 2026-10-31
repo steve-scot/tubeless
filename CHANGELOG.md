@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 (2.0.0 is a significance major: ad blocking is additive, not breaking.)
 
+## Unreleased
+
+### Changed
+
+- New installs start with the "You" section set to minimal, and with live
+  chat, fundraiser shelves and info panels hidden. Existing settings are
+  unchanged.
+
 ## 2.6.0 - 2026-10-12
 
 ### Added

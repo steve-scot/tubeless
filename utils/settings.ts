@@ -68,7 +68,7 @@ export const DEFAULTS: Settings = {
     hideShorts: true,
     hideExplore: true,
     hideMoreFromYouTube: true,
-    youSection: 'full',
+    youSection: 'minimal',
   },
   topBar: {
     hideCreate: true,
@@ -96,14 +96,14 @@ export const DEFAULTS: Settings = {
   watchPage: {
     actionRow: 'minimal',
     hideMerch: true,
-    hideLiveChat: false,
+    hideLiveChat: true,
     hideAISummary: true,
-    hideFundraiser: false,
+    hideFundraiser: true,
     hideEndScreenCards: true,
     hideDescription: false,
     hideComments: false,
     hideRecommendations: false,
-    hideInfoPanels: false,
+    hideInfoPanels: true,
   },
   ads: {
     hideAll: true,
