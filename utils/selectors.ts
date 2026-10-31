@@ -666,8 +666,7 @@ export const SELECTORS = {
     //  - ytd-info-panel-container-renderer: broader - also covers
     //    misinformation / election / health disclaimers
     // Hiding both gives a single toggle that covers every variant the
-    // user is likely to want gone. Default off - these panels can
-    // carry safety info, so opt-in is the more conservative default.
+    // user is likely to want gone.
     hideInfoPanels: [
       'ytd-watch-flexy #clarify-box', // ✓ Wikipedia-style topic card
       'ytd-watch-flexy ytd-info-panel-container-renderer', // ✓ broader info panels
