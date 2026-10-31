@@ -431,6 +431,11 @@ export const SELECTORS = {
       // class (no platform prefix), so it applies cleanly under ytm- wrappers.
       'ytm-rich-item-renderer:has(yt-collection-thumbnail-view-model)', // ? mobile collection card
       'ytm-rich-item-renderer:has(a[href*="&list=PL"])', // ? mobile playlist URL pattern
+      // Mobile search lists playlists and podcasts as compact cards. The
+      // same renderer fills the Playlists tab on mobile channel pages,
+      // which the desktop-only channel exclusion doesn't cover, so scope
+      // it to search.
+      'ytm-search ytm-compact-playlist-renderer', // ✓ mobile search playlist/podcast
       'ytm-playlist-renderer', // ! mobile playlist renderer
       'ytm-podcast-renderer', // ! mobile podcast renderer
     ],

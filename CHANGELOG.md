@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   player leaves an invisible strip there that swallows clicks; Tubeless lets
   them through while the Tubeless switch is on. The buttons in that corner
   still work.
+- **Hide playlists & podcasts** now also hides them in search results on
+  mobile YouTube.
 
 ## 2.6.0 - 2026-10-12
 
