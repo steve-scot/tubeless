@@ -38,8 +38,9 @@ export default defineConfig({
   // merely ignores.
   manifest: ({ browser }) => ({
     name: 'Tubeless',
+    // Safari rejects descriptions over 112 characters.
     description:
-      'YouTube, quieter. Hide Shorts, ads, recommendation shelves, comments and more, each with its own switch. No tracking, no requests.',
+      'YouTube, quieter. Hide Shorts, ads, shelves, comments and more, one switch each. No tracking, no requests.',
     permissions: ['storage'],
     ...(browser === 'firefox' && {
       browser_specific_settings: {
