@@ -13,10 +13,12 @@
     "zip": "wxt zip --browser firefox",
     "zip:chrome": "wxt zip --browser chrome",
     "compile": "tsc --noEmit",
-    "postinstall": "wxt prepare"
+    "postinstall": "wxt prepare",
+    "screenshots": "node scripts/screenshots/index.ts"
   },
   "devDependencies": {
     "@wxt-dev/auto-icons": "^1.1.1",
+    "playwright": "^1.64.1",
     "typescript": "^5.9.0",
     "wxt": "^0.20.0"
   },

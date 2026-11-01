@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    overflow: hidden;
+    position: relative;
+    font-family: system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background: #0f0f0f;
+  }
+  body.backdrop {
+    background:
+      radial-gradient(70% 55% at 50% 0%, #c43216 0%, rgb(196 50 22 / 0) 100%),
+      radial-gradient(60% 70% at 100% 100%, #d44a1b 0%, rgb(212 74 27 / 0) 70%),
+      radial-gradient(60% 60% at 0% 100%, #f78d30 0%, rgb(247 141 48 / 0) 100%),
+      linear-gradient(180deg, #ec6a22, #f3812b);
+  }
+
+  body.bare { background: none; }
+  body.bare .window { box-shadow: none; }
+
+  .window {
+    position: absolute;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow:
+      0 0 0 0.5px rgb(0 0 0 / 0.6),
+      0 24px 60px rgb(90 20 0 / 0.35),
+      0 6px 16px rgb(90 20 0 / 0.2);
+  }
+  .page { flex: 1; overflow: hidden; background: #0f0f0f; }
+  .page img { display: block; width: 100%; }
+
+  .lights { position: absolute; display: flex; gap: 11px; }
+  .lights i { width: 12px; height: 12px; border-radius: 50%; }
+  .lights i:nth-child(1) { background: #ff5f57; }
+  .lights i:nth-child(2) { background: #febc2e; }
+  .lights i:nth-child(3) { background: #28c840; }
+
+  .bar { position: relative; flex: none; }
+  .abs { position: absolute; display: flex; align-items: center; justify-content: center; }
+  svg.i { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.5;
+          stroke-linecap: round; stroke-linejoin: round; }
+  .favicon { width: 16px; height: 16px; flex: none; }
+  .title { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+  .popup { position: absolute; overflow: hidden; }
+  .popup img { display: block; width: 360px; }
+
+  /* Firefox, default dark theme */
+  .firefox { color: #fbfbfe; background: #2b2a33; }
+  .firefox .tabs { height: 44px; background: #1d1b22; }
+  .firefox .lights { left: 13px; top: 16px; }
+  .firefox .tab { left: 159px; top: 4px; width: 223px; height: 36px; border-radius: 6px;
+                  background: #53525e; justify-content: flex-start; gap: 8px; padding: 0 30px 0 9px;
+                  font-size: 12px; }
+  .firefox .tab .close { position: absolute; right: 10px; top: 10px; }
+  .firefox .toolbar { height: 41px; background: #2b2a33; }
+  .firefox .url { left: 224px; top: 4px; width: 700px; height: 32px; border-radius: 6px;
+                  background: #1e1d24; justify-content: flex-start; padding: 0 10px; gap: 10px;
+                  font-size: 14px; color: #fbfbfe; }
+  .firefox .url .host { color: #fbfbfe; }
+  .firefox .url .dim { color: #a3a2aa; }
+  .firefox .url .star { margin-left: auto; }
+  .firefox .btn { top: 4px; width: 32px; height: 32px; border-radius: 4px; }
+  .firefox .btn.open { background: #5b5b66; }
+  .firefox .popup { border-radius: 8px; border: 1px solid #52525e;
+                    box-shadow: 0 4px 16px rgb(0 0 0 / 0.4); }
+
+  /* Chrome, dark theme */
+  .chrome { color: #e3e3e3; background: #3c3c3c; }
+  .chrome .tabs { height: 40px; background: #2b2b2b; }
+  .chrome .lights { left: 14px; top: 14px; }
+  .chrome .tab { left: 120px; top: 6px; width: 232px; height: 34px; border-radius: 10px 10px 0 0;
+                 background: #3c3c3c; justify-content: flex-start; gap: 10px; padding: 0 34px 0 14px;
+                 font-size: 12px; }
+  .chrome .tab::before, .chrome .tab::after {
+    content: ''; position: absolute; bottom: 0; width: 10px; height: 10px;
+  }
+  .chrome .tab::before { left: -10px; background: radial-gradient(circle at 0 0, transparent 10px, #3c3c3c 10px); }
+  .chrome .tab::after { right: -10px; background: radial-gradient(circle at 100% 0, transparent 10px, #3c3c3c 10px); }
+  .chrome .tab .close { position: absolute; right: 12px; top: 9px; }
+  .chrome .tabsearch { left: 80px; top: 6px; width: 28px; height: 28px; border-radius: 8px; background: #3c3c3c; }
+  .chrome .toolbar { height: 46px; background: #3c3c3c; border-bottom: 1px solid #454746; }
+  .chrome .url { left: 122px; top: 6px; width: 790px; height: 34px; border-radius: 17px;
+                 background: #282828; justify-content: flex-start; padding: 0 8px; gap: 10px;
+                 font-size: 15px; }
+  .chrome .url .site { width: 24px; height: 24px; border-radius: 50%; background: #3c3c3c;
+                       display: flex; align-items: center; justify-content: center; }
+  .chrome .url .star { margin-left: auto; margin-right: 6px; }
+  .chrome .btn { top: 7px; width: 32px; height: 32px; border-radius: 50%; color: #c7c7c7; }
+  .chrome .btn.open { background: #545454; }
+  .chrome .popup { border-radius: 8px; box-shadow: 0 2px 6px rgb(0 0 0 / 0.3), 0 8px 24px rgb(0 0 0 / 0.4); }
+
+  /* Safari, macOS 26 */
+  .safari { color: #e5e5e5; background: #0f0f0f; }
+  .safari .toolbar { height: 53px; background: #0f0f0f; border-bottom: 0.5px solid #262626; }
+  .safari .lights { left: 20px; top: 20px; }
+  .safari .pill { top: 8px; height: 36px; border-radius: 18px; background: #242424;
+                  box-shadow: inset 0 0 0 1px #2c2c2c; color: #bdbdbd; gap: 4px; padding: 0 10px; }
+  .safari .url { left: 368px; top: 8px; width: 344px; height: 36px; border-radius: 18px;
+                 background: #242424; box-shadow: inset 0 0 0 1px #2c2c2c; gap: 8px; font-size: 14px;
+                 color: #f2f2f2; }
+  .safari .url .reader { position: absolute; right: 14px; top: 10px; color: #bdbdbd; }
+  .safari .ext { width: 28px; height: 28px; border-radius: 14px; display: flex; align-items: center; justify-content: center; }
+  .safari .ext.open { background: #3a3a3a; }
+  .safari .popup { border-radius: 12px; overflow: visible;
+                   box-shadow: 0 0 0 0.5px rgb(255 255 255 / 0.12), 0 12px 32px rgb(0 0 0 / 0.5); }
+  .safari .popup .clip { border-radius: 12px; overflow: hidden; }
+  .safari .popup .arrow { position: absolute; top: -9px; width: 20px; height: 10px; }
+
+  /* iPhone and iPad: the simulator's screen as captured */
+  .bleed { display: block; width: 100%; height: 100%; }
+</style>
+</head>
+<body></body>
+<script>
+  const ICON = {
+    back: '<path d="M13 8H3M7.5 3.5 3 8l4.5 4.5"/>',
+    forward: '<path d="M3 8h10M8.5 3.5 13 8l-4.5 4.5"/>',
+    reload: '<path d="M13 8a5 5 0 1 1-1.5-3.6M13 2.5v3h-3"/>',
+    close: '<path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/>',
+    plus: '<path d="M8 3v10M3 8h10"/>',
+    chevron: '<path d="M4 6l4 4 4-4"/>',
+    star: '<path d="M8 2.2l1.8 3.7 4 .6-2.9 2.8.7 4L8 11.4l-3.6 1.9.7-4L2.2 6.5l4-.6z"/>',
+    menu: '<path d="M2.5 4h11M2.5 8h11M2.5 12h11"/>',
+    kebab: '<circle cx="8" cy="3.5" r=".6"/><circle cx="8" cy="8" r=".6"/><circle cx="8" cy="12.5" r=".6"/>',
+    sidebar: '<rect x="2" y="3" width="12" height="10" rx="2"/><path d="M6 3v10"/>',
+    shield: '<path d="M8 2l5 2v4c0 3-2.2 5-5 6-2.8-1-5-3-5-6V4z"/>',
+    tune: '<circle cx="5" cy="5" r="1.6"/><circle cx="11" cy="11" r="1.6"/><path d="M8 5h6M2 11h7"/>',
+    tabs: '<rect x="2" y="4" width="12" height="9" rx="2"/><path d="M5 2h6"/>',
+    profile: '<circle cx="8" cy="8" r="6"/><circle cx="8" cy="6.5" r="2"/><path d="M4.2 12.3c1-1.3 2.3-2 3.8-2s2.8.7 3.8 2"/>',
+    puzzle: '<path d="M3 5h2.5a1.5 1.5 0 1 1 3 0H11v2.5a1.5 1.5 0 1 1 0 3V13H3z"/>',
+    share: '<path d="M8 2v8M5 4.5 8 2l3 2.5M5 7H4v7h8V7h-1"/>',
+    overview: '<rect x="2" y="4" width="9" height="9" rx="1.5"/><path d="M5 2h7.5A1.5 1.5 0 0 1 14 3.5V11"/>',
+    reader: '<path d="M3 4h10M3 8h10M3 12h6"/>',
+    diamond: '<path d="M8 2 14 8 8 14 2 8z" fill="currentColor"/>',
+    chevronLeft: '<path d="M10 2.5 4.5 8l5.5 5.5"/>',
+  };
+  const svg = (name, extra = '') => `<svg class="i" viewBox="0 0 16 16" ${extra}>${ICON[name]}</svg>`;
+  const FAVICON = '<svg class="favicon" viewBox="0 0 16 16"><rect x="0.5" y="3" width="15" height="10.5" rx="3" fill="#ff0033"/><path d="M6.5 5.7v5.1L10.8 8.25z" fill="#fff"/></svg>';
+  const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+  const FRAMES = {
+    firefox(d) {
+      const u = new URL(d.url);
+      const rest = u.pathname === '/' ? '' : u.pathname + u.search;
+      return {
+        bars: `
+          <div class="bar tabs">
+            <div class="lights"><i></i><i></i><i></i></div>
+            <div class="abs" style="left:118px;top:13px">${svg('overview')}</div>
+            <div class="abs tab">${FAVICON}<span class="title">${esc(d.title)}</span><span class="close">${svg('close')}</span></div>
+            <div class="abs" style="left:393px;top:14px">${svg('plus')}</div>
+            <div class="abs" style="right:20px;top:14px">${svg('chevron')}</div>
+          </div>
+          <div class="bar toolbar">
+            <div class="abs btn" style="left:8px">${svg('sidebar')}</div>
+            <div class="abs btn" style="left:44px">${svg('back')}</div>
+            <div class="abs btn" style="left:80px;color:#939299">${svg('forward')}</div>
+            <div class="abs btn" style="left:116px">${svg('reload')}</div>
+            <div class="abs url">${svg('shield')}${svg('tune')}
+              <span><span class="dim">www.</span><span class="host">${esc(u.host.replace(/^www\./, ''))}</span><span class="dim">${esc(rest)}</span></span>
+              <span class="star">${svg('star')}</span></div>
+            <div class="abs btn ${d.popup ? 'open' : ''}" style="left:1002px">${d.icon}</div>
+            <div class="abs btn" style="left:1040px">${svg('menu')}</div>
+          </div>`,
+        // Right-aligned under the Tubeless button.
+        popup: { right: 1080 - 1034, top: 85 },
+      };
+    },
+    chrome(d) {
+      const u = new URL(d.url);
+      const shown = u.host.replace(/^www\./, '') + (u.pathname === '/' ? '' : u.pathname + u.search);
+      return {
+        bars: `
+          <div class="bar tabs">
+            <div class="lights"><i></i><i></i><i></i></div>
+            <div class="abs tabsearch">${svg('chevron')}</div>
+            <div class="abs tab">${FAVICON}<span class="title">${esc(d.title)}</span><span class="close">${svg('close')}</span></div>
+            <div class="abs" style="left:368px;top:12px">${svg('plus')}</div>
+          </div>
+          <div class="bar toolbar">
+            <div class="abs btn" style="left:8px">${svg('back')}</div>
+            <div class="abs btn" style="left:44px;color:#7f7f7f">${svg('forward')}</div>
+            <div class="abs btn" style="left:80px">${svg('reload')}</div>
+            <div class="abs url"><span class="site">${svg('tune')}</span><span>${esc(shown)}</span><span class="star">${svg('star')}</span></div>
+            <div class="abs btn ${d.popup ? 'open' : ''}" style="left:924px">${d.icon}</div>
+            <div class="abs btn" style="left:960px">${svg('puzzle')}</div>
+            <div class="abs btn" style="left:1004px">${svg('profile')}</div>
+            <div class="abs btn" style="left:1040px">${svg('kebab')}</div>
+          </div>`,
+        popup: { right: 1080 - 956, top: 82 },
+      };
+    },
+    safari(d) {
+      const u = new URL(d.url);
+      return {
+        bars: `
+          <div class="bar toolbar">
+            <div class="lights"><i></i><i></i><i></i></div>
+            <div class="abs pill" style="left:90px">${svg('sidebar')}${svg('chevron')}</div>
+            <div class="abs pill" style="left:162px;width:36px;padding:0">${svg('chevronLeft')}</div>
+            <div class="abs pill" style="left:206px;padding:0 4px">
+              <span class="ext">${svg('diamond')}</span>
+              <span class="ext ${d.popup ? 'open' : ''}">${d.icon}</span></div>
+            <div class="abs url">${FAVICON}<span>${esc(u.host.replace(/^www\./, ''))}</span><span class="reader">${svg('reader')}</span></div>
+            <div class="abs pill" style="right:12px;gap:14px;padding:0 14px">${svg('share')}${svg('plus')}${svg('overview')}</div>
+          </div>`,
+        // Arrow points at the Tubeless icon in the extensions pill.
+        popup: { left: 110, top: 60, arrow: 268 - 110 },
+      };
+    },
+  };
+
+  window.render = ({ frame, page, popup, title, url, icon, win, canvas, backdrop }) => {
+    document.body.style.width = `${canvas.width}px`;
+    document.body.style.height = `${canvas.height}px`;
+    if (frame === 'none') {
+      document.body.className = '';
+      document.body.innerHTML = `<img class="bleed" src="${page}">`;
+      return Promise.all([...document.images].map((img) => img.decode()));
+    }
+    document.body.className = backdrop ? 'backdrop' : 'bare';
+    const f = FRAMES[frame]({ title, url, icon, popup });
+    let popupHtml = '';
+    if (popup) {
+      const p = f.popup;
+      const pos = 'left' in p ? `left:${p.left}px` : `right:${p.right}px`;
+      const maxH = win.height - p.top - 8;
+      const img = `<img src="${popup}" style="height:auto">`;
+      popupHtml = frame === 'safari'
+        ? `<div class="popup" style="${pos};top:${p.top}px">
+             <svg class="arrow" style="left:${p.arrow - 10}px" viewBox="0 0 20 10"><path d="M0 10 10 0l10 10z" fill="#1c1c1e"/></svg>
+             <div class="clip" style="max-height:${maxH}px">${img}</div></div>`
+        : `<div class="popup" style="${pos};top:${p.top}px;max-height:${maxH}px">${img}</div>`;
+    }
+    document.body.innerHTML = `
+      <div class="window ${frame}" style="left:${win.x}px;top:${win.y}px;width:${win.width}px;height:${win.height}px;border-radius:${win.radius}px">
+        ${f.bars}
+        <div class="page"><img src="${page}"></div>
+        ${popupHtml}
+      </div>`;
+    return Promise.all([...document.images].map((img) => img.decode()));
+  };
+</script>
+</html>

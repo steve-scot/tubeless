@@ -17,7 +17,7 @@ export default defineConfig({
   zip: {
     // releases/ holds past dev-build artifacts; the bare '*.zip' glob
     // only matches at the repo root, so exclude the directory itself.
-    excludeSources: ['*.zip', '*.xpi', 'docs/**', 'releases/**'],
+    excludeSources: ['*.zip', '*.xpi', 'docs/**', 'releases/**', 'scripts/**'],
   },
   // Marks the popup's <html> on Safari builds before first paint, for the
   // Safari-only layout in popup/style.css.
