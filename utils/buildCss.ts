@@ -1,4 +1,4 @@
-import type { Settings } from './settings';
+import type { Settings, ThumbnailSize } from './settings';
 import { SELECTORS } from './selectors';
 
 function rule(selectors: readonly string[]): string {
@@ -17,6 +17,54 @@ function feedRule(selectors: readonly string[]): string {
   return rule(
     selectors.map((s) => `${s}:not(ytd-browse[page-subtype*="channel"] *)`),
   );
+}
+
+// Widest a thumbnail may be at each step below YouTube's size, in px.
+const THUMBNAIL_MAX_WIDTHS: Partial<Record<ThumbnailSize, number>> = {
+  [-1]: 440,
+  [-2]: 380,
+  [-3]: 330,
+  [-4]: 290,
+  [-5]: 250,
+  [-6]: 220,
+};
+
+// Beyond this grid width the column count stops rising.
+const MAX_GRID_WIDTH = 7680;
+// --ytd-rich-grid-item-margin and --ytd-rich-grid-gutter-margin.
+const ITEM_MARGIN = 16;
+const GUTTER = 16;
+
+const GRID = 'ytd-browse ytd-rich-grid-renderer';
+const ITEMS = `${GRID} > #contents > ytd-rich-item-renderer`;
+
+// YouTube's script writes a column count to --ytd-rich-grid-items-per-row
+// on the grid, and each item's width is 100% / that variable. It stops
+// adding columns on wide windows, and caps the grid at that many 700px
+// thumbnails, centred. Instead, a container query on the grid's width picks
+// the fewest whole columns that keep each thumbnail within the step's
+// width, and the width caps are lifted so the grid fills the page.
+// The override sits on the items, not the grid, so --tubeless-columns can
+// read YouTube's count without a cycle; max() keeps the grid from ever
+// showing fewer columns than YouTube would. YouTube's script also drops
+// the outer margin of the items it counts as first or last in a row, by its
+// own column count, so every item is given both margins to keep rows full.
+// Shelves sit in ytd-rich-section-renderer and keep YouTube's sizing.
+function gridRule(size: ThumbnailSize): string {
+  // Unknown values (e.g. synced from a newer version) fall back to YouTube's.
+  const maxWidth = THUMBNAIL_MAX_WIDTHS[size];
+  if (!maxWidth) return '';
+  const column = maxWidth + ITEM_MARGIN;
+  let css =
+    `${GRID} { container-type: inline-size; --tubeless-columns: var(--ytd-rich-grid-items-per-row); }\n` +
+    `${GRID} > #contents, ${GRID} .chip-bar.ytd-rich-grid-renderer, ${GRID} #title.ytd-rich-grid-renderer { max-width: none !important; }\n` +
+    `${ITEMS} { margin-left: calc(var(--ytd-rich-grid-item-margin) / 2) !important; margin-right: calc(var(--ytd-rich-grid-item-margin) / 2) !important; }\n`;
+  for (let columns = 2; (columns - 1) * column + 2 * GUTTER < MAX_GRID_WIDTH; columns++) {
+    css +=
+      `@container (width > ${(columns - 1) * column + 2 * GUTTER}px) { ${ITEMS} ` +
+      `{ --ytd-rich-grid-items-per-row: max(var(--tubeless-columns), ${columns}) !important; } }\n`;
+  }
+  return css;
 }
 
 export function buildCss(settings: Settings): string {
@@ -97,6 +145,9 @@ export function buildCss(settings: Settings): string {
     parts.push(feedRule(SELECTORS.feeds.hideLive));
   if (settings.contentTypes.hideMusic)
     parts.push(feedRule(SELECTORS.feeds.hideMusic));
+
+  // Layout. Unlike the feed filters, this also applies on channel pages.
+  parts.push(gridRule(settings.layout.thumbnailSize));
 
   // Watch page
   if (settings.watchPage.actionRow === 'minimal')

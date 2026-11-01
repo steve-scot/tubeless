@@ -46,16 +46,20 @@ function bindCheckboxesAndSelects(settings: Settings): void {
 
     if (el instanceof HTMLInputElement && el.type === 'checkbox') {
       el.checked = !!value;
-    } else if (el instanceof HTMLSelectElement) {
+    } else {
       el.value = String(value);
     }
 
+    // A range fires change once per release or key step, not while
+    // dragging, which keeps storage.sync under its write quota.
     el.addEventListener('change', async () => {
       const current = await loadSettings();
       const newValue =
         el instanceof HTMLInputElement && el.type === 'checkbox'
           ? el.checked
-          : el.value;
+          : el.type === 'range'
+            ? Number(el.value)
+            : el.value;
       setNested(current, key, newValue);
       await saveSettings(current);
       if (key === 'enabled') applyPowerState(!!newValue);
@@ -129,6 +133,22 @@ function wireMasters(): void {
   });
 }
 
+function wireThumbnailSize(): void {
+  const input = document.querySelector<HTMLInputElement>('#thumbnail-size');
+  if (!input) return;
+  const describe = (): void => {
+    const steps = -Number(input.value);
+    input.setAttribute(
+      'aria-valuetext',
+      steps === 0
+        ? 'YouTube size'
+        : `${steps} of ${-Number(input.min)} steps smaller than YouTube size`,
+    );
+  };
+  describe();
+  input.addEventListener('input', describe);
+}
+
 function showVersion(): void {
   const slot = document.getElementById('version');
   if (!slot) return;
@@ -145,6 +165,7 @@ async function init(): Promise<void> {
   bindCheckboxesAndSelects(settings);
   bindSegmentedControls(settings);
   wireMasters();
+  wireThumbnailSize();
   showVersion();
 }
 

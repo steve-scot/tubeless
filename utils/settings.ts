@@ -3,6 +3,9 @@ import { browser } from 'wxt/browser';
 export type YouSection = 'full' | 'minimal' | 'hidden';
 export type ActionRowMode = 'full' | 'minimal';
 export type Theme = 'auto' | 'light' | 'dark';
+// 0 is YouTube's own thumbnail size; each step below sets a smaller
+// thumbnail, so more fit in a row.
+export type ThumbnailSize = 0 | -1 | -2 | -3 | -4 | -5 | -6;
 
 export type Settings = {
   schemaVersion: 2;
@@ -55,6 +58,9 @@ export type Settings = {
   };
   popups: {
     hideSurveys: boolean;
+  };
+  layout: {
+    thumbnailSize: ThumbnailSize;
   };
   appearance: {
     theme: Theme;
@@ -110,6 +116,9 @@ export const DEFAULTS: Settings = {
   },
   popups: {
     hideSurveys: true,
+  },
+  layout: {
+    thumbnailSize: 0,
   },
   appearance: {
     theme: 'auto',
@@ -182,6 +191,7 @@ export function mergeWithDefaults(stored: unknown): Settings {
       },
       ads: { ...DEFAULTS.ads, ...s.ads },
       popups: { ...DEFAULTS.popups, ...s.popups },
+      layout: { ...DEFAULTS.layout, ...s.layout },
       appearance: { ...DEFAULTS.appearance, ...s.appearance },
     };
   }
@@ -231,6 +241,8 @@ export function mergeWithDefaults(stored: unknown): Settings {
     ads: { ...DEFAULTS.ads },
     // popups didn't exist in v1 - fall through to defaults.
     popups: { ...DEFAULTS.popups },
+    // layout didn't exist in v1 - fall through to defaults.
+    layout: { ...DEFAULTS.layout },
     appearance: { ...DEFAULTS.appearance, ...v1.appearance },
   };
 }

@@ -150,6 +150,26 @@
         <label class="row"><span class="row-label">Hide Premieres &amp; upcoming</span><span class="toggle"><input type="checkbox" data-key="contentTypes.hidePremieres" /><span class="toggle-track"><span class="toggle-thumb"></span></span></span></label>
       </section>
 
+      <!-- Layout -->
+      <section class="section">
+        <div class="section-header">
+          <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7" rx="1"/>
+            <rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/>
+            <rect x="14" y="14" width="7" height="7" rx="1"/>
+          </svg>
+          <h2 class="section-title">Layout</h2>
+        </div>
+        <div class="range-row">
+          <label class="row-label" for="thumbnail-size">Thumbnail size</label>
+          <span class="row-hint" id="thumbnail-size-hint">Smaller fits more videos in each row on Home, Subscriptions and channel pages.</span>
+          <input class="range" type="range" id="thumbnail-size" min="-6" max="0" step="1" data-key="layout.thumbnailSize" aria-describedby="thumbnail-size-hint" />
+          <div class="range-ticks" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+          <div class="range-ends" aria-hidden="true"><span>Smaller</span><span>YouTube</span></div>
+        </div>
+      </section>
+
       <!-- Watch page -->
       <section class="section">
         <div class="section-header">

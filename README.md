@@ -62,6 +62,8 @@ are grouped in the popup by where they appear:
   upsells and the ad overlays on the player. This is cosmetic: an ad that
   plays inside the video still plays.
 - **Popups**: survey and feedback prompts, in dialogs and in the feed.
+- **Layout**: a thumbnail size slider that fits more videos in each row on
+  Home, Subscriptions and channel pages.
 
 One fix is always on and has no switch: YouTube's player leaves an invisible
 strip across the top of the video that swallows clicks, so clicking there
