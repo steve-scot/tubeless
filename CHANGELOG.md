@@ -39,6 +39,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changing a setting while a video is open no longer leaves the video
   at its old size when the player gets wider, for example after hiding
   the recommendations sidebar.
+- YouTube's new watch page layout, with comments in a panel beside the
+  video: **Hide comments** now releases the panel's column so the video
+  takes the width, and **Hide recommendations** no longer hides the
+  comments panel there.
 
 ## 2.6.0 - 2026-10-12
 

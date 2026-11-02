@@ -639,6 +639,10 @@ export const SELECTORS = {
     // Single dedicated wrapper on watch pages.
     hideComments: [
       'ytd-comments#comments', // ✓
+      // The side-rail watch layout (ytd-watch-flexy[split-scroll]) shows
+      // comments in an engagement panel beside the player instead. buildCss
+      // also releases the column the panel reserves.
+      'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-comments-section"]', // ✓ side-rail comments panel
       // Mobile inlines a comments teaser card under the player which
       // opens the comments bottom sheet on tap. Hiding the card removes
       // the entrypoint entirely.
@@ -686,9 +690,12 @@ export const SELECTORS = {
     // Trade-off: while collapsed, the frame's own "Show chat" button is
     // hidden with the column - the "Live chat replay → Open panel" teaser
     // under the video still re-opens it.
+    // In the side-rail layout ([split-scroll]) recommendations sit under
+    // the player and #secondary holds the comments and description
+    // panels, so the column is left alone there.
     hideRecommendations: [
       'ytd-watch-next-secondary-results-renderer', // ✓ the content
-      'ytd-watch-flexy #secondary:not(:has(ytd-live-chat-frame:not([collapsed])))', // ✓ collapse column unless chat is expanded
+      'ytd-watch-flexy:not([split-scroll]) #secondary:not(:has(ytd-live-chat-frame:not([collapsed])))', // ✓ collapse column unless chat is expanded
       // Mobile shows recommendations inline below the player rather than
       // in a sidebar.
       'ytm-single-column-watch-next-results-renderer .related-items-container', // ✓ mobile related-items wrapper

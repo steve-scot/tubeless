@@ -175,8 +175,26 @@ export function buildCss(settings: Settings): string {
     parts.push(rule(SELECTORS.watchPage.hideEndScreenCards));
   if (settings.watchPage.hideDescription)
     parts.push(rule(SELECTORS.watchPage.hideDescription));
-  if (settings.watchPage.hideComments)
+  if (settings.watchPage.hideComments) {
     parts.push(rule(SELECTORS.watchPage.hideComments));
+    // The side-rail layout opens the comments panel by default and
+    // reserves its column with a #columns::after spacer while
+    // [fixed-panel-expanded] is set. With the panel hidden, apply
+    // YouTube's own closed-panel layout (its :not([fixed-panel-expanded])
+    // rules) so the player takes the width instead of an empty column.
+    const panel = 'ytd-watch-flexy[split-scroll][is-comments-panel-visible]';
+    parts.push(
+      `${panel} #secondary { display: none !important; }\n` +
+        // No width transition: the player re-measures on the resize nudge,
+        // which would otherwise land mid-transition.
+        `${panel} #columns::after { width: 0px !important; min-width: 0px !important; padding: 0px !important; transition: none !important; }\n` +
+        // The spacer still has to clear the fixed rail of panel buttons.
+        `${panel}[show-fixed-side-menu]:not([side-rail-collapsed]):not([full-bleed-player]) #columns::after { width: var(--ytd-watch-flexy-fixed-side-menu-width) !important; }\n` +
+        `${panel} #primary { max-width: 100% !important; }\n` +
+        `${panel} #player, ${panel} #below > :not(:last-child) { margin-left: auto !important; margin-right: auto !important; ` +
+        'max-width: calc(var(--ytd-watch-flexy-max-player-height) * 1.7777777778) !important; }\n',
+    );
+  }
   if (settings.watchPage.hideInfoPanels)
     parts.push(rule(SELECTORS.watchPage.hideInfoPanels));
   if (settings.watchPage.hideRecommendations) {
@@ -188,7 +206,7 @@ export function buildCss(settings: Settings): string {
     // display:none doesn't remove the frame, so the guard would otherwise
     // keep an empty column reserved on live-stream pages.
     if (settings.watchPage.hideLiveChat) {
-      parts.push('ytd-watch-flexy #secondary { display: none !important; }\n');
+      parts.push('ytd-watch-flexy:not([split-scroll]) #secondary { display: none !important; }\n');
     }
     // Hiding the recommendations column removes the sidebar's space
     // reservation but YouTube's flexy layout still sizes the primary
