@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Safari on Mac, iPhone and iPad**, from the App Store. Opening the
+  Tubeless app shows how to turn the extension on. Needs macOS 12, or
+  iOS or iPadOS 17, or later. Safari doesn't sync extension settings
+  between devices, so each device keeps its own.
 - **Thumbnail size**, in a new Layout section: a slider with six steps
   below YouTube's own size, so more videos fit in each row on Home,
   Subscriptions and channel pages. Each step keeps thumbnails at about
