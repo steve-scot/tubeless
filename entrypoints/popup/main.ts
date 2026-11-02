@@ -1,4 +1,5 @@
 import { loadSettings, saveSettings, type Settings, type Theme } from '@/utils/settings';
+import { SITE_QUERY } from '@/utils/site';
 
 type Path = string;
 
@@ -149,6 +150,24 @@ function wireThumbnailSize(): void {
   input.addEventListener('input', describe);
 }
 
+// Controls marked data-site do nothing on the other YouTube site, so they
+// are left out when the tab says which site it shows. On Firefox for
+// Android the popup opens in its own tab, and the background script passes
+// the YouTube tab in ?tab=. With no answer (not a YouTube tab, or no access
+// to it) everything stays.
+async function hideControlsForOtherSite(): Promise<void> {
+  const param = new URLSearchParams(location.search).get('tab');
+  const tabId = param
+    ? Number(param)
+    : (await browser.tabs.query({ active: true, currentWindow: true }))[0]?.id;
+  if (tabId == null) return;
+  const site: unknown = await browser.tabs.sendMessage(tabId, SITE_QUERY).catch(() => undefined);
+  if (site !== 'desktop' && site !== 'mobile') return;
+  document.querySelectorAll<HTMLElement>('[data-site]').forEach((el) => {
+    el.hidden = el.dataset.site !== site;
+  });
+}
+
 function showVersion(): void {
   const slot = document.getElementById('version');
   if (!slot) return;
@@ -167,6 +186,7 @@ async function init(): Promise<void> {
   wireMasters();
   wireThumbnailSize();
   showVersion();
+  await hideControlsForOtherSite();
 }
 
 init();

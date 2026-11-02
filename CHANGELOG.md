@@ -18,7 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   below YouTube's own size, so more videos fit in each row on Home,
   Subscriptions and channel pages. Each step keeps thumbnails at about
   the same size whatever the window width, so wide windows fill with
-  more columns rather than YouTube's 3 or 4 large ones.
+  more columns rather than YouTube's 3 or 4 large ones. It only shows
+  when the tab has YouTube's desktop site, as on a computer or iPad: the
+  mobile site has no grid to resize.
 
 ### Changed
 

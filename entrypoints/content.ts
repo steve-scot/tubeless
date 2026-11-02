@@ -2,11 +2,16 @@ import { defineContentScript } from 'wxt/utils/define-content-script';
 import { browser } from 'wxt/browser';
 import { loadSettings } from '@/utils/settings';
 import { buildCss } from '@/utils/buildCss';
+import { SITE_QUERY, siteOf } from '@/utils/site';
 
 export default defineContentScript({
   matches: ['*://*.youtube.com/*'],
   runAt: 'document_start',
   async main() {
+    browser.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+      if (message === SITE_QUERY) sendResponse(siteOf(location.hostname));
+    });
+
     const styleEl = document.createElement('style');
     styleEl.id = 'tubeless';
 

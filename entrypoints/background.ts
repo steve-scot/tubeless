@@ -15,7 +15,10 @@ export default defineBackground(() => {
     }
   });
 
-  browser.action.onClicked.addListener(() => {
-    browser.tabs.create({ url: browser.runtime.getURL('/popup.html') });
+  // The popup asks the YouTube tab which site it shows; in its own tab it
+  // can't find that tab by itself.
+  browser.action.onClicked.addListener((tab) => {
+    const query = tab.id == null ? '' : `?tab=${tab.id}`;
+    browser.tabs.create({ url: browser.runtime.getURL('/popup.html') + query });
   });
 });
