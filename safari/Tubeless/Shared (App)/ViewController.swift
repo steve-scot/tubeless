@@ -20,47 +20,56 @@ class ViewController: PlatformViewController, WKNavigationDelegate, WKScriptMess
 
         self.webView.navigationDelegate = self
 
-#if os(iOS)
-        self.webView.scrollView.isScrollEnabled = false
-#endif
-
         self.webView.configuration.userContentController.add(self, name: "controller")
 
         self.webView.loadFileURL(Bundle.main.url(forResource: "Main", withExtension: "html")!, allowingReadAccessTo: Bundle.main.resourceURL!)
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        let osVersion = ProcessInfo.processInfo.operatingSystemVersion.majorVersion
+
 #if os(iOS)
-        webView.evaluateJavaScript("show('ios')")
+        let device = UIDevice.current.userInterfaceIdiom == .pad ? "ipad" : "iphone"
+        webView.evaluateJavaScript("show('ios', '\(device)', \(osVersion))")
 #elseif os(macOS)
-        webView.evaluateJavaScript("show('mac')")
+        webView.evaluateJavaScript("show('mac', 'mac', \(osVersion))")
 
         SFSafariExtensionManager.getStateOfSafariExtension(withIdentifier: extensionBundleIdentifier) { (state, error) in
+            // Without a state the page leaves the status line out.
             guard let state = state, error == nil else {
-                // Insert code to inform the user that something went wrong.
                 return
             }
 
             DispatchQueue.main.async {
-                if #available(macOS 13, *) {
-                    webView.evaluateJavaScript("show('mac', \(state.isEnabled), true)")
-                } else {
-                    webView.evaluateJavaScript("show('mac', \(state.isEnabled), false)")
-                }
+                webView.evaluateJavaScript("showState(\(state.isEnabled))")
             }
         }
 #endif
     }
 
+    // Links open in the default browser rather than inside the app.
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        guard navigationAction.navigationType == .linkActivated, let url = navigationAction.request.url else {
+            decisionHandler(.allow)
+            return
+        }
+
+#if os(iOS)
+        UIApplication.shared.open(url)
+#elseif os(macOS)
+        NSWorkspace.shared.open(url)
+#endif
+        decisionHandler(.cancel)
+    }
+
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
 #if os(macOS)
-        if (message.body as! String != "open-preferences") {
+        if (message.body as! String != "open-settings") {
             return
         }
 
         SFSafariApplication.showPreferencesForExtension(withIdentifier: extensionBundleIdentifier) { error in
             guard error == nil else {
-                // Insert code to inform the user that something went wrong.
                 return
             }
 

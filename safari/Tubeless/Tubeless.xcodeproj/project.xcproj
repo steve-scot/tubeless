@@ -44,12 +44,6 @@
                 },
               ],
             }, {
-              "path": "Icon.png",
-              "target-membership": [
-                "Tubeless (iOS)/resources",
-                "Tubeless (macOS)/resources",
-              ],
-            }, {
               "path": "Style.css",
               "target-membership": [
                 "Tubeless (iOS)/resources",

@@ -1,24 +1,21 @@
-function show(platform, enabled, useSettingsInsteadOfPreferences) {
-    document.body.classList.add(`platform-${platform}`);
+function show(platform, device, osVersion) {
+    const classes = document.body.classList;
+    classes.add(platform, device);
 
-    if (useSettingsInsteadOfPreferences) {
-        document.getElementsByClassName('platform-mac state-on')[0].innerText = "Tubeless’s extension is currently on. You can turn it off in the Extensions section of Safari Settings.";
-        document.getElementsByClassName('platform-mac state-off')[0].innerText = "Tubeless’s extension is currently off. You can turn it on in the Extensions section of Safari Settings.";
-        document.getElementsByClassName('platform-mac state-unknown')[0].innerText = "You can turn on Tubeless’s extension in the Extensions section of Safari Settings.";
-        document.getElementsByClassName('platform-mac open-preferences')[0].innerText = "Quit and Open Safari Settings…";
+    // iOS 18 moved app settings under Settings > Apps; macOS 13 renamed
+    // Safari Preferences to Settings.
+    if (platform === 'ios' && osVersion < 18) {
+        classes.add('ios-17');
     }
-
-    if (typeof enabled === "boolean") {
-        document.body.classList.toggle(`state-on`, enabled);
-        document.body.classList.toggle(`state-off`, !enabled);
-    } else {
-        document.body.classList.remove(`state-on`);
-        document.body.classList.remove(`state-off`);
+    if (platform === 'mac' && osVersion < 13) {
+        classes.add('mac-12');
     }
 }
 
-function openPreferences() {
-    webkit.messageHandlers.controller.postMessage("open-preferences");
+function showState(enabled) {
+    document.body.classList.add(enabled ? 'state-on' : 'state-off');
 }
 
-document.querySelector("button.open-preferences").addEventListener("click", openPreferences);
+document.querySelector('button.open-settings').addEventListener('click', () => {
+    webkit.messageHandlers.controller.postMessage('open-settings');
+});

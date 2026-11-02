@@ -4,58 +4,156 @@
     cursor: default;
 }
 
+/* Colours from the extension popup. */
 :root {
     color-scheme: light dark;
 
-    --spacing: 20px;
+    --paper: #F4EDE0;
+    --ink: #1C1812;
+    --muted: #6E634F;
+    --border: #E1D8C2;
+    --accent: #DC4F2A;
 }
 
-html {
-    height: 100%;
+@media (prefers-color-scheme: dark) {
+    :root {
+        --paper: #191919;
+        --ink: #E7E6E5;
+        --muted: #929190;
+        --border: #2B2A2A;
+        --accent: #F26B45;
+    }
+}
+
+/* Platform-specific content stays hidden until the app calls show(). */
+body:not(.ios) .only-ios,
+body:not(.iphone) .only-iphone,
+body:not(.ipad) .only-ipad,
+body:not(.mac) .only-mac,
+body.ios-17 .not-ios-17,
+body:not(.mac-12) .only-mac-12,
+body.mac-12 .not-mac-12,
+body:not(.state-on) .only-state-on,
+body:not(.state-off) .only-state-off,
+body:not(.state-on, .state-off) .status {
+    display: none;
 }
 
 body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    /* Follows Dynamic Type on iOS. */
+    font: -apple-system-body;
+    line-height: 1.45;
+}
 
-    gap: var(--spacing);
-    margin: 0 calc(var(--spacing) * 2);
-    height: 100%;
+body.mac {
+    font-size: 15px;
+}
 
-    font: -apple-system-short-body;
+main {
+    max-width: 34em;
+    margin: 0 auto;
+    padding: 32px 24px 36px;
+}
+
+header {
+    margin-bottom: 24px;
     text-align: center;
 }
 
-body:not(.platform-mac, .platform-ios) :is(.platform-mac, .platform-ios) {
-    display: none;
+.wordmark {
+    margin: 0 0 8px;
+    line-height: 0;
 }
 
-body.platform-ios .platform-mac {
-    display: none;
+.brand-mark {
+    width: 190px;
+    height: 28px;
+}
+.brand-mark .brand-pill { stroke: var(--accent); }
+.brand-mark .brand-wordmark { fill: var(--ink); }
+
+.tagline {
+    margin: 0;
+    font-family: ui-serif, Georgia, serif;
+    font-style: italic;
+    color: var(--muted);
 }
 
-body.platform-mac .platform-ios {
-    display: none;
+p {
+    margin: 0 0 16px;
 }
 
-body.platform-ios .platform-mac {
-    display: none;
+.status {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
 }
 
-body:not(.state-on, .state-off) :is(.state-on, .state-off) {
-    display: none;
+h2 {
+    margin: 28px 0 12px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
 }
 
-body.state-on :is(.state-off, .state-unknown) {
-    display: none;
+.steps {
+    display: grid;
+    gap: 14px;
+    margin: 0 0 16px;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
 }
 
-body.state-off :is(.state-on, .state-unknown) {
-    display: none;
+.steps li {
+    position: relative;
+    padding-left: 2.5em;
+    counter-increment: step;
+}
+
+.steps li::before {
+    content: counter(step);
+    position: absolute;
+    top: -0.15em;
+    left: 0;
+    display: grid;
+    place-items: center;
+    width: 1.75em;
+    height: 1.75em;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    box-sizing: border-box;
+    font-weight: 600;
+    line-height: 1;
+}
+
+strong {
+    font-weight: 600;
 }
 
 button {
     font-size: 1em;
+}
+
+footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 24px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+}
+
+a {
+    color: inherit;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 3px;
+    cursor: pointer;
 }
