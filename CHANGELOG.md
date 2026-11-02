@@ -36,6 +36,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   still work.
 - **Hide playlists & podcasts** now also hides them in search results on
   mobile YouTube.
+- Changing a setting while a video is open no longer leaves the video
+  at its old size when the player gets wider, for example after hiding
+  the recommendations sidebar.
 
 ## 2.6.0 - 2026-10-12
 

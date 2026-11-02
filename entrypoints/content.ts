@@ -37,12 +37,12 @@ export default defineContentScript({
       flexy.hasAttribute('theater') &&
       flexy.hasAttribute('live-chat-present-and-expanded');
 
+    // Next frame, so YouTube's own layout pass for the state change (and
+    // our new CSS) lands before the re-measure.
+    const nudge = () => requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
+
     const nudgeIfReserved = () => {
-      if (hideLiveChat && inReservedState()) {
-        // Next frame, so YouTube's own layout pass for the state change
-        // (and our released width) lands before the re-measure.
-        requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
-      }
+      if (hideLiveChat && inReservedState()) nudge();
     };
 
     const watchFlexy = (el: Element) => {
@@ -77,10 +77,10 @@ export default defineContentScript({
 
     browser.storage.onChanged.addListener((changes, areaName) => {
       if (areaName === 'sync' && 'settings' in changes) {
-        // Re-nudge after the new CSS lands: turning hideLiveChat on
-        // while the chat column is reserved releases the width, and the
-        // chrome needs the same re-measure as the attribute path.
-        apply().then(nudgeIfReserved);
+        // Any setting can change the player's width (hiding the
+        // recommendations sidebar or the chat column widens it), and the
+        // video and its chrome keep their old pixel sizes until a resize.
+        apply().then(nudge);
       }
     });
   },
