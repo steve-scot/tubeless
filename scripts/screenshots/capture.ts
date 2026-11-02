@@ -2,7 +2,8 @@ import { chromium, type BrowserContext, type Page, type Worker } from 'playwrigh
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { DESKTOP, SEED_VIDEOS, WATCH, YOUTUBE_COOKIES, storedSettings } from './config.ts';
+import { DESKTOP, HOME_ATTEMPTS, SEED_VIDEOS, WATCH, YOUTUBE_COOKIES, storedSettings } from './config.ts';
+import { feedHasClutter, hideVideos, loadMoreShelves, visibleVideos } from './videos.ts';
 
 export type CaptureMeta = {
   home: { title: string; url: string };
@@ -55,21 +56,37 @@ export async function capture(opts: { extension: string; out: string }): Promise
     }
 
     log('home');
-    await page.goto(YOUTUBE);
-    try {
-      await page
-        .locator('ytd-rich-item-renderer')
-        .nth(1)
-        .waitFor({ state: 'attached', timeout: 20_000 });
-    } catch {
-      const shot = path.join(out, 'home-error.png');
-      await page.screenshot({ path: shot });
-      throw new Error(`desktop: the home feed did not load (see ${shot}). Try again, or add more SEED_VIDEOS.`);
+    // Ads come and go between loads; the "before" shot should show one.
+    await setEnabled(worker, false);
+    for (let attempt = 1; ; attempt++) {
+      await page.goto(YOUTUBE);
+      try {
+        await page
+          .locator('ytd-rich-item-renderer')
+          .nth(1)
+          .waitFor({ state: 'attached', timeout: 20_000 });
+      } catch {
+        const shot = path.join(out, 'home-error.png');
+        await page.screenshot({ path: shot });
+        throw new Error(`desktop: the home feed did not load (see ${shot}). Try again, or add more SEED_VIDEOS.`);
+      }
+      await page.waitForTimeout(3000);
+      await page.evaluate(loadMoreShelves);
+      await page.evaluate(hideVideos);
+      if (await page.evaluate<boolean>(feedHasClutter)) break;
+      if (attempt === HOME_ATTEMPTS) {
+        console.warn('    no load showed both an ad and a full row of Shorts');
+        break;
+      }
+      log('no ad or full row of Shorts; reloading');
     }
     const home = { title: await page.title(), url: page.url() };
     await shootBeforeAfter(page, worker, out, 'home');
 
     log('watch');
+    // Tubeless hides the pre-roll's skip button, and YouTube ignores a
+    // scripted click on it.
+    await setEnabled(worker, false);
     await page.goto(`${YOUTUBE}/watch?v=${WATCH.id}`);
     await settleVideo(page, DESKTOP.player);
     const watch = { title: await page.title(), url: page.url() };
@@ -99,6 +116,9 @@ async function shootBeforeAfter(page: Page, worker: Worker, out: string, name: '
     await page.waitForTimeout(1500);
     await waitForVisibleImages(page);
     if (name === 'watch') await waitForPlayerChromeHidden(page, DESKTOP.player);
+    await page.evaluate(hideVideos);
+    await waitForVisibleImages(page);
+    writeFileSync(path.join(out, `${name}-${suffix}-videos.txt`), (await page.evaluate<string[]>(visibleVideos)).join('\n') + '\n');
     await page.screenshot({ path: path.join(out, `${name}-${suffix}.png`) });
   }
 }

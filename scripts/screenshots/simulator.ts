@@ -1,8 +1,9 @@
 import { execFile } from 'node:child_process';
-import { mkdirSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { promisify } from 'node:util';
 import {
+  HOME_ATTEMPTS,
   SEED_VIDEOS,
   SIMULATORS,
   WATCH,
@@ -13,6 +14,7 @@ import {
 } from './config.ts';
 import { SETTINGS_APP, UiDriver } from './driver.ts';
 import { Inspector } from './inspector.ts';
+import { feedHasClutter, hideVideos, loadMoreShelves, visibleVideos } from './videos.ts';
 
 const run = promisify(execFile);
 const simctl = async (...args: string[]) => (await run('xcrun', ['simctl', ...args])).stdout;
@@ -79,8 +81,19 @@ async function captureSimulator(name: Simulator, sim: SimulatorConfig, app: stri
     }
 
     log('home');
-    await safari.go(`${YOUTUBE}/`);
-    await safari.waitForFeed();
+    // Ads come and go between loads; the "before" shot should show one.
+    await safari.setEnabled(false);
+    for (let attempt = 1; ; attempt++) {
+      await safari.go(`${YOUTUBE}/`);
+      await safari.waitForFeed();
+      await sleep(3000);
+      if (await safari.filterFeed()) break;
+      if (attempt === HOME_ATTEMPTS) {
+        console.warn(`    ${name}: no load showed a good "before" feed`);
+        break;
+      }
+      log('no clutter worth showing; reloading');
+    }
     await safari.beforeAfter(path.join(out, 'home'), false);
 
     log('watch');
@@ -152,8 +165,9 @@ async function enableExtension(udid: string, ui: UiDriver) {
   for (;;) {
     await simctl('terminate', udid, bundle).catch(() => {});
     await ui.send('activate', { bundle });
-    await ui.tap({ bundle, identifier: 'com.apple.settings.apps', scroll: true });
     try {
+      // The scroll to Apps sometimes lands on the search field instead.
+      await ui.tap({ bundle, identifier: 'com.apple.settings.apps', scroll: true });
       await ui.tap({ bundle, label: 'Safari', scroll: true, timeout: 15 });
       break;
     } catch (error) {
@@ -214,10 +228,11 @@ class SafariTab {
 
   async go(url: string) {
     // The flag tells the old page from the new one, even when the URL is the same.
+    // The reply can lose a race with the navigation it starts.
     await this.page.evaluate(`(() => {
       window.tubelessLeaving = true;
       setTimeout(() => { location.href = ${JSON.stringify(url)} }, 50);
-    })()`);
+    })()`).catch(() => {});
     await sleep(500);
     await this.until('!window.tubelessLeaving && document.readyState === "complete"', 45_000);
   }
@@ -277,10 +292,22 @@ class SafariTab {
     await this.page.evaluate(`(p => { p.pauseVideo(); p.unloadModule('captions'); })(document.querySelector('${this.player}'))`);
   }
 
+  async setEnabled(enabled: boolean) {
+    const context = await this.page.extensionContext();
+    await this.page.evaluate(`browser.storage.sync.set({ settings: ${JSON.stringify(storedSettings(enabled))} })`, { context });
+  }
+
+  // Loads more shelves, removes unwanted videos, and says whether what's
+  // left on screen makes a good "before" shot.
+  async filterFeed(): Promise<boolean> {
+    await this.page.evaluate(loadMoreShelves, { timeout: 15_000 });
+    await this.page.evaluate(hideVideos);
+    return this.page.evaluate<boolean>(feedHasClutter);
+  }
+
   async beforeAfter(prefix: string, watch: boolean) {
     for (const [enabled, suffix] of [[false, 'before'], [true, 'after']] as const) {
-      const context = await this.page.extensionContext();
-      await this.page.evaluate(`browser.storage.sync.set({ settings: ${JSON.stringify(storedSettings(enabled))} })`, { context });
+      await this.setEnabled(enabled);
       // Feed previews play inline; stop them so both shots show the same thing.
       await this.page.evaluate(`(() => {
         scrollTo(0, 0);
@@ -294,6 +321,9 @@ class SafariTab {
         await this.until(`${hidden}(document.querySelector('${this.player}'))`, 15_000)
           .catch(() => console.warn('    the player controls stayed visible'));
       }
+      await this.page.evaluate(hideVideos);
+      await sleep(1000);
+      writeFileSync(`${prefix}-${suffix}-videos.txt`, (await this.page.evaluate<string[]>(visibleVideos)).join('\n') + '\n');
       await screenshot(this.udid, `${prefix}-${suffix}.png`);
     }
   }

@@ -10,7 +10,42 @@ export type Scene =
 
 // Played before the home capture. A signed-out session that has watched
 // nothing gets an empty home feed; these give it something to recommend from.
-export const SEED_VIDEOS = ['9nTZTJHBCAs', 'cFWBatrHbPk'];
+export const SEED_VIDEOS = ['TjTk-W_iBDg', '4Gw7MSX-wLs', 'vMGuObY8_sw'];
+
+// Videos left out of every capture: a store screenshot shows whatever
+// YouTube recommends, and App Review judges every thumbnail in it. Only
+// the clear-cut cases go here: violence or injury, nudity or sexualised
+// thumbnails, fabricated news about real people, minors with alcohol,
+// weapons, profanity. Each capture lists the videos it shows in
+// <scene>-videos.txt for review.
+export const HIDDEN_VIDEOS: { id: string; why: string }[] = [
+  { id: '1YwGCbiSyjo', why: 'fabricated news about a real person' },
+  { id: '9Jl-dh-ao6o', why: 'fabricated news about a real person' },
+  { id: 'dxZFaVXDPTk', why: 'fabricated news about a real person' },
+  { id: 'vGp7R_Mq3mk', why: 'fabricated news about a real person' },
+  { id: 'uaGDGB-dcBY', why: 'animal violence' },
+  { id: 'WrFSxo8ECjM', why: 'animal violence' },
+  { id: 'vpjt7WCNpug', why: 'animal violence' },
+  { id: '-TFHQ_leVoc', why: 'violence' },
+  { id: 'Kjat_a5B_TQ', why: 'rioting and fire' },
+  { id: 'f7YbyK6o5n4', why: 'blood' },
+  { id: 'k9MR-8nUSIM', why: 'injury' },
+  { id: '0UBnyWBAcME', why: 'injury' },
+  { id: 'T3wxJlPDlUc', why: 'injury' },
+  { id: 'mHgqHuXdHZo', why: 'injury' },
+  { id: 'RfkRTcUFuFk', why: 'crash wreckage' },
+  { id: 'xDFvONitIRc', why: 'plane crashing into a building' },
+  { id: 'HN2A1L6D7Ac', why: 'birth' },
+  { id: 'a2q6ZARPANM', why: 'nudity' },
+  { id: '7EhreUiqozM', why: 'sexualised' },
+  { id: 'LYayiYbzD30', why: 'sexualised' },
+  { id: 'KPGxEgBAbf0', why: 'a child and alcohol' },
+  { id: 'qgbHh2NvZFk', why: 'a gun' },
+  { id: 'mpLq5sdJoy8', why: 'profanity' },
+];
+
+// Loads of the home page to try for one showing an ad and Shorts.
+export const HOME_ATTEMPTS = 10;
 
 // The watch-page video, and how far into it (seconds) to pause. The capture
 // plays up to this point, so a later moment makes for a slower run.
