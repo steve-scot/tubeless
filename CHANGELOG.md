@@ -6,12 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 (2.0.0 is a significance major: ad blocking is additive, not breaking.)
 
-## Unreleased
+## 2.7.0 - 2026-11-02
 
 ### Added
 
-- **Safari on Mac, iPhone and iPad**, from the App Store. Opening the
-  Tubeless app shows how to turn the extension on. Needs macOS 12, or
+- **Safari on Mac, iPhone and iPad**, through a Tubeless app for the App
+  Store. It isn't on the App Store yet; tubeless.app will say when it is.
+  Opening the app shows how to turn the extension on. Needs macOS 12, or
   iOS or iPadOS 17, or later. Safari doesn't sync extension settings
   between devices, so each device keeps its own.
 - **Thumbnail size**, in a new Layout section: a slider with six steps
