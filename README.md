@@ -103,8 +103,9 @@ When YouTube ships a redesign, that's the file to edit.
 
 - No telemetry, no analytics, no network requests.
 - The only permission requested is `storage`, used to persist your settings
-  (synced through your own browser account, nowhere else).
-- The manifest declares `data_collection_permissions: ['none']`.
+  (synced through your own browser account on Firefox and Chrome, kept on
+  each device by Safari, and nowhere else).
+- The Firefox manifest declares `data_collection_permissions: ['none']`.
 
 ## Reporting a problem
 
