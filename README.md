@@ -109,10 +109,10 @@ When YouTube ships a redesign, that's the file to edit.
 ## Reporting a problem
 
 YouTube changes its pages often, and a change can bring back something
-Tubeless used to hide, or hide something it shouldn't. Open an
-[issue](https://github.com/steve-scot/tubeless/issues) saying which page it
-was, what you saw, your browser and the Tubeless version from the popup. A
-screenshot helps.
+Tubeless used to hide, or hide something it shouldn't. Email
+[bugs@tubeless.app](mailto:bugs@tubeless.app) saying which page it was, what
+you saw, your browser and the Tubeless version from the popup. A screenshot
+helps.
 
 ## Building from source
 
