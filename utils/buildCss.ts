@@ -143,6 +143,8 @@ export function buildCss(settings: Settings): string {
     parts.push(feedRule(SELECTORS.feeds.hideCollections));
   if (settings.contentTypes.hideLive)
     parts.push(feedRule(SELECTORS.feeds.hideLive));
+  if (settings.contentTypes.hidePastLive)
+    parts.push(feedRule(SELECTORS.feeds.hidePastLive));
   if (settings.contentTypes.hideMusic)
     parts.push(feedRule(SELECTORS.feeds.hideMusic));
 

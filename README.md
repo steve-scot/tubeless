@@ -51,7 +51,8 @@ are grouped in the popup by where they appear:
 - **Feeds**: on Home, Subscriptions and search results, every shelf at once,
   or gaming shelves, event, alert and promo banners and feed nudges one by
   one. Shorts, movies and shows, community posts, Mixes, playlists and
-  podcasts, live streams, music videos, member-only videos and Premieres.
+  podcasts, live streams, past live streams, music videos, member-only
+  videos and Premieres.
   Channel pages are never filtered.
 - **Watch page**: a trimmed row of action buttons, the merch and fundraiser
   shelves, live chat, end-screen cards, the description, comments, the

@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 (2.0.0 is a significance major: ad blocking is additive, not breaking.)
 
+## Unreleased
+
+### Added
+
+- **Hide past live streams**, in Feeds: hides finished live streams
+  ("Streamed 2 days ago") on Home and Subscriptions, while the channel's
+  own Live tab still lists them. Works when YouTube is in English, on
+  YouTube's desktop site; search results aren't covered.
+
 ## 2.7.0 - 2026-11-03
 
 ### Added

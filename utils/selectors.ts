@@ -487,6 +487,19 @@ export const SELECTORS = {
       'ytm-video-with-context-renderer:has(ytm-thumbnail-overlay-time-status-renderer[overlay-style="LIVE"])', // ! mobile legacy
     ],
 
+    // ─── Hide past live streams in feeds ───────────────────────────────
+    // A finished stream's card matches an ordinary upload's in every
+    // class, attribute and URL. Only the date part of the metadata row
+    // differs: aria-label "Streamed 22 hours ago" against "2 days ago".
+    // The label is localised, so this works in English only. Search
+    // results show the date as plain text with no label, so they can't be
+    // matched. No mobile rule: the mobile card has the phrase only inside
+    // the headline's combined label, and mobile channel pages aren't
+    // exempt from feed rules, so it would empty a channel's Live tab.
+    hidePastLive: [
+      'ytd-rich-item-renderer:has(yt-content-metadata-view-model [aria-label^="Streamed "])', // ✓ English label
+    ],
+
     // ─── Hide premieres & upcoming/scheduled videos in feeds ───────────
     // New view-model: premiere/upcoming cards uniquely carry a
     // <lockup-attachments-view-model> child holding the "Notify me"

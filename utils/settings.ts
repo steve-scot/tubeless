@@ -35,6 +35,7 @@ export type Settings = {
     hideMixes: boolean;
     hideCollections: boolean;
     hideLive: boolean;
+    hidePastLive: boolean;
     hideMusic: boolean;
     hideMembersOnly: boolean;
     hidePremieres: boolean;
@@ -95,6 +96,7 @@ export const DEFAULTS: Settings = {
     hideMixes: true,
     hideCollections: false,
     hideLive: false,
+    hidePastLive: false,
     hideMusic: false,
     hideMembersOnly: false,
     hidePremieres: false,
@@ -226,6 +228,8 @@ export function mergeWithDefaults(stored: unknown): Settings {
       hideCollections:
         v1.feeds?.hideCollections ?? DEFAULTS.contentTypes.hideCollections,
       hideLive: v1.feeds?.hideLive ?? DEFAULTS.contentTypes.hideLive,
+      // hidePastLive didn't exist in v1.
+      hidePastLive: DEFAULTS.contentTypes.hidePastLive,
       hideMusic: v1.feeds?.hideMusic ?? DEFAULTS.contentTypes.hideMusic,
       hideMembersOnly:
         v1.feeds?.hideMembersOnly ?? DEFAULTS.contentTypes.hideMembersOnly,
