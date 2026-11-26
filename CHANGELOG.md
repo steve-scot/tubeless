@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 (2.0.0 is a significance major: ad blocking is additive, not breaking.)
 
+## Unreleased
+
+### Fixed
+
+- **Hide ads** no longer hides the Skip button on video ads. It used to hide
+  all of the player's ad controls, but the ad still played, with no way to
+  skip it and nothing to show it was an ad. Ads inside the video now keep
+  their Skip button, countdown and label; ads elsewhere on the page are
+  still hidden.
+
 ## 2.8.0 - 2026-11-05
 
 ### Added

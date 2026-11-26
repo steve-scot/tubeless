@@ -60,8 +60,7 @@ are grouped in the popup by where they appear:
 - **AI**: video summaries, "Ask questions", Ask YouTube in the search bar and
   custom feed prompts.
 - **Ads**: sponsored slots, display and companion ads, brand shelves, Premium
-  upsells and the ad overlays on the player. This is cosmetic: an ad that
-  plays inside the video still plays.
+  upsells. Ads that play inside the video still play, with their Skip button.
 - **Popups**: survey and feedback prompts, in dialogs and in the feed.
 - **Layout**: a thumbnail size slider that fits more videos in each row on
   Home, Subscriptions and channel pages.

@@ -719,21 +719,16 @@ export const SELECTORS = {
   ads: {
     // ─── Hide ads across all YouTube surfaces ───────────────────────────
     // Covers: in-feed sponsored slots (search/home), masthead banner,
-    // watch-page display & companion ads, in-player ad chrome (countdown,
-    // overlay banner, progress bar - cosmetic only, see note below),
-    // sponsored brand & shopping shelves, Premium upsell mealbars, and
-    // ad-click tracking anchors.
+    // watch-page display & companion ads, sponsored brand & shopping
+    // shelves, Premium upsell mealbars, and ad-click tracking anchors.
     //
     // Premium accounts don't see ads server-side, so most selectors here
     // are a silent no-op for paying users.
     //
-    // IMPORTANT - in-player chrome is cosmetic only:
-    // Hiding .video-ads / .ytp-ad-module / .ytp-ad-overlay-* removes the
-    // countdown UI and overlay banners but the <video> element still
-    // plays the ad's audio and burns its duration. CSS alone cannot skip
-    // a pre-roll. This is intentional - Tubeless is a no-network,
-    // no-JS-injection extension. If you want pre-roll skipping, use a
-    // dedicated network-level ad blocker alongside Tubeless.
+    // Leave the player's ad UI alone (.video-ads, .ytp-ad-*): CSS can't
+    // stop a pre-roll playing, and the Skip button, countdown and
+    // "Sponsored" label all live inside .video-ads.ytp-ad-module, so
+    // hiding it leaves an unskippable ad that looks like the video.
     hideAll: [
       // ── In-feed sponsored slots & promoted results ───────────────
       'ytd-ad-slot-renderer', // ✓ generic in-feed ad wrapper
@@ -759,17 +754,9 @@ export const SELECTORS = {
       'ytd-companion-slot-renderer', // ✓ companion ad next to the player
       'ytd-action-companion-ad-renderer', // ✓ action-companion variant
       'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-ads"]', // ✓ "Ads" engagement panel in watch sidebar
-      '#player-ads', // ✓ container for ads attached to the player
+      '#player-ads', // ✓ ad panel in the watch sidebar, outside the player
 
-      // ── In-player ad chrome (cosmetic - does NOT skip the ad) ────
-      '.video-ads', // ✓ ad slot container inside the player
-      '.ytp-ad-module', // ✓ countdown / "Ad" module
-      '.ytp-ad-overlay-container', // ✓ in-video banner overlay container
-      '.ytp-ad-overlay-slot', // ? overlay slot variant
-      '.ytp-ad-text-overlay', // ✓ text-overlay banner
-      '.ytp-ad-progress', // ✓ ad progress bar
-      '.ytp-ad-progress-list', // ✓ ad progress list
-      '.ad-container', // ✓ generic ad-container wrapper
+      // ── Player promo badge ───────────────────────────────────────
       // "Suggested action" promo badge at the player's bottom-right.
       // Generic class - flagged because YouTube could repurpose this
       // for non-ad prompts (subscribe nudges, captions hints). If a
@@ -801,9 +788,9 @@ export const SELECTORS = {
       'a[href^="https://www.googleadservices.com/pagead/aclk?"]', // ✓ ad-click tracker URLs
 
       // ── Mobile (m.youtube.com) ad wrappers ──────────────────────
-      // The class-based selectors above (.video-ads, .ytp-ad-*,
-      // .ytBadgeShape*) and the URL-tracker hook are already cross-
-      // platform. Only the ytd- wrappers need ytm- parallels added.
+      // The class-based selectors above and the URL-tracker hook are
+      // already cross-platform. Only the ytd- wrappers need ytm-
+      // parallels added.
       'ytm-ad-slot-renderer', // ? mobile in-feed ad wrapper
       'ytm-rich-item-renderer:has(ytm-ad-slot-renderer, ytm-display-ad-renderer, ytm-promoted-video-renderer, ytm-promoted-sparkles-web-renderer, ytm-banner-promo-renderer)', // ? mobile grid cell wrapping an ad
       'ytm-rich-section-renderer:has(ytm-brand-video-shelf-renderer)', // ! mobile section wrapper around brand shelf
