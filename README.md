@@ -12,18 +12,19 @@
   <a href="LICENSE"><img alt="Licence: MIT" src="https://img.shields.io/badge/licence-MIT-1C1812"></a>
 </p>
 
-<p align="center"><b><a href="https://addons.mozilla.org/firefox/addon/tubeless/">Install for Firefox</a> · <a href="https://chromewebstore.google.com/detail/tubeless/majebohkonlfnedomfjnjaaeioiooolg">Install for Chrome</a> · <a href="https://tubeless.app">tubeless.app</a></b></p>
+<p align="center"><b><a href="https://addons.mozilla.org/firefox/addon/tubeless/">Install for Firefox</a> · <a href="https://chromewebstore.google.com/detail/tubeless/majebohkonlfnedomfjnjaaeioiooolg">Install for Chrome</a> · <a href="https://apps.apple.com/app/id6829432490">Install for Safari</a> · <a href="https://tubeless.app">tubeless.app</a></b></p>
 
 <p align="center">
   <img src="docs/screenshots/popup.webp" alt="The Tubeless popup open over a YouTube video, with switches grouped under Sidebar, Top bar and Home shelves" width="800">
 </p>
 
-Tubeless is a small extension for Firefox and Chrome that hides the parts of
-YouTube you'd rather not see. Shorts, ads, recommendation shelves, end-screen
-cards, comments: each one has its own switch in the popup, and one more brings
-plain YouTube back.
+Tubeless is a small extension for Firefox, Chrome and Safari that hides the
+parts of YouTube you'd rather not see. Shorts, ads, recommendation shelves,
+end-screen cards, comments: each one has its own switch in the popup, and one
+more brings plain YouTube back.
 
-Works on desktop and on Firefox for Android.
+Works on desktop, on Firefox for Android, and in Safari on iPhone and iPad,
+through the Tubeless app from the App Store.
 
 ## What it hides
 
